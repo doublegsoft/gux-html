@@ -1,0 +1,154 @@
+<div id="pageUserHomeList" class="page">
+  <div class="page-header d-flex pl-3 pr-3" >
+    <strong>用户主页</strong>
+    <div class="d-flex ms-auto">
+      <a widget-id="buttonAdd" class="btn btn-sm btn-outline-primary mr-2">新增用户主页</a>
+    </div>
+  </div>
+  <div class="page-body">
+    <div widget-id="widgetTableUserHome"></div>
+  </div>
+</div>
+<script>
+function PageUserHomeList() {
+  this.page = dom.find('#pageUserHomeList');
+}
+
+PageUserHomeList.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  /*!
+  ** 跳转到【用户主页】编辑页面
+  */
+  dom.bind(this.buttonAdd, 'click', ev => {
+    this.gotoEditUserHome({});
+  });
+  this.tableUserHome = new PaginationTable({
+    columns:[{
+      title: '搜索条件', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+      },
+    },{
+      title: '所有者', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+      },
+    },{
+      title: '内容', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+        td.innerHTML = row.cotnent;  
+      },
+    },{
+      title: '状态', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+      },
+    },{
+      title: '操作', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+        /*!
+        ** 编辑
+        */
+        let buttonEdit = dom.templatize(`
+          <a class="btn btn-sm btn-link">编辑</a>
+        `, row);
+        dom.bind(buttonEdit, 'click', ev => {
+          this.gotoEditUserHome(row);
+        }); 
+        td.appendChild(buttonEdit);
+        /*!
+        ** 详情
+        */
+        let buttonDetail = dom.templatize(`
+          <a class="btn btn-sm btn-link">详情</a>
+        `, row);
+        dom.bind(buttonDetail, 'click', ev => {
+          this.gotoDetailUserHome(row);
+        }); 
+        td.appendChild(buttonDetail);
+        /*!
+        ** 删除
+        */
+        let buttonDelete = dom.templatize(`
+          <a class="btn btn-sm btn-link">删除</a>
+        `, row);
+        dom.bind(buttonDelete, 'click', ev => {
+          dialog.confirm('确定删除该条信息？', () => {
+            this.doDeleteUserHome(row);
+          });      
+        }); 
+        td.appendChild(buttonDelete);
+      },
+    }],
+  });
+  this.tableUserHome.render(this.widgetTableUserHome);
+};
+
+/*!
+** 跳转到【用户主页】编辑页面
+*/
+PageUserHomeList.prototype.gotoEditUserHome = function (model) {
+  ajax.sidebar({
+    url: 'html/stdbiz/pim/user_home/edit.html',
+    title: (model.userHomeName || '新增') + '信息',
+    actions: [{
+      title: '保存',
+      classes: 'btn btn-sm btn-primary',
+      onClick: ev => {
+        
+      },
+    },{
+      title: '关闭',
+      classes: 'btn btn-sm btn-success',
+      onClick: ev => { dom.close('sidebar'); },
+    }],
+    success: () => {
+      pageUserHomeEdit.show({
+        userHomeId: model.userHomeId,
+      });
+    },
+  });     
+};
+      
+/*!
+** 跳转到【用户主页】详情页面
+*/
+PageUserHomeList.prototype.gotoDetailUserHome = function (model) {
+  ajax.overlay({
+    url: 'html/stdbiz/pim/user_home/detail.html',
+    title: model.userHomeName + '详情',
+    success: () => {
+      pageUserHomeDetail.show({
+        userHomeId: model.userHomeId,
+      });
+    },
+  });    
+};
+      
+/*!
+** 调用【用户主页】删除接口
+*/
+PageUserHomeList.prototype.doDeleteUserHome = function (model) {
+  xhr.post({
+    url: '/api/v3/common/script/stdbiz/pim/user_home/delete',
+    params: {
+      userHomeId: model.userHomeId,
+    },
+  }).then(data => {
+  
+  });    
+};
+
+PageUserHomeList.prototype.destroy = function () {
+  delete pageUserHomeList;
+};
+
+PageUserHomeList.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageUserHomeList = new PageUserHomeList();
+</script>

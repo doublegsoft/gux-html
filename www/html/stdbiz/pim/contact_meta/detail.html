@@ -1,0 +1,26 @@
+<div id="pageContactMetaDetail" class="page">
+  <div class="page-body">
+    
+  </div>
+</div>
+<script>
+function PageContactMetaDetail() {
+  this.page = dom.find('#pageContactMetaDetail');
+}
+
+PageContactMetaDetail.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  
+};
+
+PageContactMetaDetail.prototype.destroy = function () {
+  delete pageContactMetaDetail;
+};
+
+PageContactMetaDetail.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageContactMetaDetail = new PageContactMetaDetail();
+</script>

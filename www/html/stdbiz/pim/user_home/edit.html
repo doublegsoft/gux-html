@@ -1,0 +1,37 @@
+<div id="pageUserHomeEdit" class="page">
+  <div class="page-body">
+    <div widget-id="widgetFormUserHome"></div>
+  </div>
+</div>
+<script>
+function PageUserHomeEdit() {
+  this.page = dom.find('#pageUserHomeEdit');
+}
+
+PageUserHomeEdit.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  this.formUserHome = new EditableForm({
+    fields:[{
+      name: 'userHomeId',     
+      title: '', 
+      input: 'hidden',
+    },{
+      name: 'weight',     
+      title: '权重', 
+      input: 'text',
+    }],
+  });
+  this.formUserHome.render(this.widgetFormUserHome);
+};
+
+PageUserHomeEdit.prototype.destroy = function () {
+  delete pageUserHomeEdit;
+};
+
+PageUserHomeEdit.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageUserHomeEdit = new PageUserHomeEdit();
+</script>

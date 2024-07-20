@@ -1,0 +1,49 @@
+<div id="pageConversationMemberColl" class="page">
+  <div class="page-header d-flex pl-3 pr-3" >
+    <strong>会话成员信息</strong>
+    <div class="d-flex ms-auto">
+      <a widget-id="buttonAdd" class="btn btn-sm btn-outline-primary mr-2">新增会话成员信息</a>
+    </div>
+  </div>
+  <div class="page-body">
+    
+  </div>
+</div>
+<script>
+function PageConversationMemberColl() {
+  this.page = dom.find('#pageConversationMemberColl');
+}
+
+PageConversationMemberColl.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  /*!
+  ** 跳转到【会话成员信息】编辑页面
+  */
+  dom.bind(this.buttonAdd, 'click', ev => {
+    this.gotoEditConversationMember({});
+  });
+  
+};
+
+PageConversationMemberColl.prototype.buildTile4ConversationMemberColl = function (row) {
+  let ret = dom.templatize(`
+    <div class="d-flex">
+      <div>
+        <div class="gx-fs-16 gx-fb">{{status}}</div>
+      </div>  
+    </div>
+  `, row);
+  return ret;
+};
+
+PageConversationMemberColl.prototype.destroy = function () {
+  delete pageConversationMemberColl;
+};
+
+PageConversationMemberColl.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageConversationMemberColl = new PageConversationMemberColl();
+</script>

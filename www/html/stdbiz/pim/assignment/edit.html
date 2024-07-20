@@ -1,0 +1,50 @@
+<div id="pageAssignmentEdit" class="page">
+  <div class="page-body">
+    <div widget-id="widgetFormAssignment"></div>
+  </div>
+</div>
+<script>
+function PageAssignmentEdit() {
+  this.page = dom.find('#pageAssignmentEdit');
+}
+
+PageAssignmentEdit.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  this.formAssignment = new EditableForm({
+    fields:[{
+      name: 'assignmentId',     
+      title: '下发任务', 
+      input: 'hidden',
+    },{
+      name: 'assignmentName',     
+      title: '下发任务名称', 
+      input: 'text',
+    },{
+      name: 'status',     
+      title: '状态', 
+      input: 'select',
+      options: {
+        values: [{
+          text: '选项A', value: 'A',
+        },{
+          text: '选项B', value: 'B',
+        },{
+          text: '选项C', value: 'C',
+        }],     
+      },  
+    }],
+  });
+  this.formAssignment.render(this.widgetFormAssignment);
+};
+
+PageAssignmentEdit.prototype.destroy = function () {
+  delete pageAssignmentEdit;
+};
+
+PageAssignmentEdit.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageAssignmentEdit = new PageAssignmentEdit();
+</script>

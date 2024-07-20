@@ -1,0 +1,26 @@
+<div id="pageUserFeedbackDetail" class="page">
+  <div class="page-body">
+    
+  </div>
+</div>
+<script>
+function PageUserFeedbackDetail() {
+  this.page = dom.find('#pageUserFeedbackDetail');
+}
+
+PageUserFeedbackDetail.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  
+};
+
+PageUserFeedbackDetail.prototype.destroy = function () {
+  delete pageUserFeedbackDetail;
+};
+
+PageUserFeedbackDetail.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageUserFeedbackDetail = new PageUserFeedbackDetail();
+</script>

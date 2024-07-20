@@ -1,0 +1,54 @@
+<div id="pageUserHomeColl" class="page">
+  <div class="page-header d-flex pl-3 pr-3" >
+    <strong>用户主页</strong>
+    <div class="d-flex ms-auto">
+      <a widget-id="buttonAdd" class="btn btn-sm btn-outline-primary mr-2">新增用户主页</a>
+    </div>
+  </div>
+  <div class="page-body">
+    
+  </div>
+</div>
+<script>
+function PageUserHomeColl() {
+  this.page = dom.find('#pageUserHomeColl');
+}
+
+PageUserHomeColl.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  /*!
+  ** 跳转到【用户主页】编辑页面
+  */
+  dom.bind(this.buttonAdd, 'click', ev => {
+    this.gotoEditUserHome({});
+  });
+  
+};
+
+PageUserHomeColl.prototype.buildTile4UserHomeColl = function (row) {
+  let ret = dom.templatize(`
+    <div>
+      <div class="d-flex">
+      </div>
+      <div class="d-flex">
+        <div class="d-flex">
+          <i class="fas fa-star"></i>
+          <span class="ms-auto">{{weight}}</span>
+        </div>
+      </div>
+    </div>
+  `, row);
+  return ret;
+};
+
+PageUserHomeColl.prototype.destroy = function () {
+  delete pageUserHomeColl;
+};
+
+PageUserHomeColl.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageUserHomeColl = new PageUserHomeColl();
+</script>

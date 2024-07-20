@@ -1,0 +1,154 @@
+<div id="pageConversationMessageList" class="page">
+  <div class="page-header d-flex pl-3 pr-3" >
+    <strong>会话消息信息</strong>
+    <div class="d-flex ms-auto">
+      <a widget-id="buttonAdd" class="btn btn-sm btn-outline-primary mr-2">新增会话消息信息</a>
+    </div>
+  </div>
+  <div class="page-body">
+    <div widget-id="widgetTableConversationMessage"></div>
+  </div>
+</div>
+<script>
+function PageConversationMessageList() {
+  this.page = dom.find('#pageConversationMessageList');
+}
+
+PageConversationMessageList.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  /*!
+  ** 跳转到【会话消息信息】编辑页面
+  */
+  dom.bind(this.buttonAdd, 'click', ev => {
+    this.gotoEditConversationMessage({});
+  });
+  this.tableConversationMessage = new PaginationTable({
+    columns:[{
+      title: '搜索条件', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+      },
+    },{
+      title: '所有者', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+      },
+    },{
+      title: '内容', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+        td.innerHTML = row.cotnent;  
+      },
+    },{
+      title: '状态', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+      },
+    },{
+      title: '操作', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+        /*!
+        ** 编辑
+        */
+        let buttonEdit = dom.templatize(`
+          <a class="btn btn-sm btn-link">编辑</a>
+        `, row);
+        dom.bind(buttonEdit, 'click', ev => {
+          this.gotoEditConversationMessage(row);
+        }); 
+        td.appendChild(buttonEdit);
+        /*!
+        ** 详情
+        */
+        let buttonDetail = dom.templatize(`
+          <a class="btn btn-sm btn-link">详情</a>
+        `, row);
+        dom.bind(buttonDetail, 'click', ev => {
+          this.gotoDetailConversationMessage(row);
+        }); 
+        td.appendChild(buttonDetail);
+        /*!
+        ** 删除
+        */
+        let buttonDelete = dom.templatize(`
+          <a class="btn btn-sm btn-link">删除</a>
+        `, row);
+        dom.bind(buttonDelete, 'click', ev => {
+          dialog.confirm('确定删除该条信息？', () => {
+            this.doDeleteConversationMessage(row);
+          });      
+        }); 
+        td.appendChild(buttonDelete);
+      },
+    }],
+  });
+  this.tableConversationMessage.render(this.widgetTableConversationMessage);
+};
+
+/*!
+** 跳转到【会话消息信息】编辑页面
+*/
+PageConversationMessageList.prototype.gotoEditConversationMessage = function (model) {
+  ajax.sidebar({
+    url: 'html/stdbiz/pim/conversation_message/edit.html',
+    title: (model.conversationMessageName || '新增') + '信息',
+    actions: [{
+      title: '保存',
+      classes: 'btn btn-sm btn-primary',
+      onClick: ev => {
+        
+      },
+    },{
+      title: '关闭',
+      classes: 'btn btn-sm btn-success',
+      onClick: ev => { dom.close('sidebar'); },
+    }],
+    success: () => {
+      pageConversationMessageEdit.show({
+        conversationMessageId: model.conversationMessageId,
+      });
+    },
+  });     
+};
+      
+/*!
+** 跳转到【会话消息信息】详情页面
+*/
+PageConversationMessageList.prototype.gotoDetailConversationMessage = function (model) {
+  ajax.overlay({
+    url: 'html/stdbiz/pim/conversation_message/detail.html',
+    title: model.conversationMessageName + '详情',
+    success: () => {
+      pageConversationMessageDetail.show({
+        conversationMessageId: model.conversationMessageId,
+      });
+    },
+  });    
+};
+      
+/*!
+** 调用【会话消息信息】删除接口
+*/
+PageConversationMessageList.prototype.doDeleteConversationMessage = function (model) {
+  xhr.post({
+    url: '/api/v3/common/script/stdbiz/pim/conversation_message/delete',
+    params: {
+      conversationMessageId: model.conversationMessageId,
+    },
+  }).then(data => {
+  
+  });    
+};
+
+PageConversationMessageList.prototype.destroy = function () {
+  delete pageConversationMessageList;
+};
+
+PageConversationMessageList.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageConversationMessageList = new PageConversationMessageList();
+</script>

@@ -1,0 +1,62 @@
+<div id="pageSocialMediaAccountColl" class="page">
+  <div class="page-header d-flex pl-3 pr-3" >
+    <strong>社交媒体账号</strong>
+    <div class="d-flex ms-auto">
+      <a widget-id="buttonAdd" class="btn btn-sm btn-outline-primary mr-2">新增社交媒体账号</a>
+    </div>
+  </div>
+  <div class="page-body">
+    
+  </div>
+</div>
+<script>
+function PageSocialMediaAccountColl() {
+  this.page = dom.find('#pageSocialMediaAccountColl');
+}
+
+PageSocialMediaAccountColl.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  /*!
+  ** 跳转到【社交媒体账号】编辑页面
+  */
+  dom.bind(this.buttonAdd, 'click', ev => {
+    this.gotoEditSocialMediaAccount({});
+  });
+  
+};
+
+PageSocialMediaAccountColl.prototype.buildTile4SocialMediaAccountColl = function (row) {
+  let ret = dom.templatize(`
+    <div>
+      <div class="d-flex">
+        <div style="width: 72px;">
+          <image src="{{avatar}}" class="gx-wh-64">
+        </div>  
+        <div>  
+          <div class="gx-text-primary">{{socialMediaAccountName}}</div>
+          <div class="gx-text-secondary">{{personId}}</div>
+          <div class="gx-text-secondary gx-fs-12">{{birthDate}}</div>
+        </div>  
+      </div>
+      <div class="d-flex">
+        <div class="d-flex">
+          <i class="fas fa-star"></i>
+          <span class="ms-auto">{{genderCode}}</span>
+        </div>
+      </div>
+    </div>
+  `, row);
+  return ret;
+};
+
+PageSocialMediaAccountColl.prototype.destroy = function () {
+  delete pageSocialMediaAccountColl;
+};
+
+PageSocialMediaAccountColl.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageSocialMediaAccountColl = new PageSocialMediaAccountColl();
+</script>

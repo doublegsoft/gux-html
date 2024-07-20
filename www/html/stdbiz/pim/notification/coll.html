@@ -1,0 +1,52 @@
+<div id="pageNotificationColl" class="page">
+  <div class="page-header d-flex pl-3 pr-3" >
+    <strong>通知提醒</strong>
+    <div class="d-flex ms-auto">
+      <a widget-id="buttonAdd" class="btn btn-sm btn-outline-primary mr-2">新增通知提醒</a>
+    </div>
+  </div>
+  <div class="page-body">
+    
+  </div>
+</div>
+<script>
+function PageNotificationColl() {
+  this.page = dom.find('#pageNotificationColl');
+}
+
+PageNotificationColl.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  /*!
+  ** 跳转到【通知提醒】编辑页面
+  */
+  dom.bind(this.buttonAdd, 'click', ev => {
+    this.gotoEditNotification({});
+  });
+  
+};
+
+PageNotificationColl.prototype.buildTile4NotificationColl = function (row) {
+  let ret = dom.templatize(`
+    <div class="d-flex">
+      <div>  
+        <div class="gx-text-primary">{{notificationName}}</div>
+      </div>  
+      <div>
+        <div class="gx-fs-16 gx-fb">{{status}}</div>
+      </div>  
+    </div>
+  `, row);
+  return ret;
+};
+
+PageNotificationColl.prototype.destroy = function () {
+  delete pageNotificationColl;
+};
+
+PageNotificationColl.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageNotificationColl = new PageNotificationColl();
+</script>

@@ -1,0 +1,215 @@
+{
+  "home": {
+    "text": "首页",
+    "icon": "nav-icon icon-speedometer",
+    "url": "javascript:ajax.view({url:'html/stdbiz/pim/contact/list.html', containerId: 'container'});"
+  },
+  "groups": [{
+    "title": "应用示例",
+    "menus": [{
+      "text": "应用程序",
+      "icon": "nav-icon fa-solid fa-cubes",
+      "items": [{
+        "text": "手机页面",
+        "icon": "nav-icon icon-note font-16",
+        "url": "javascript:ajax.view({url: 'html/application/mobivas/design.html', containerId: 'container'});"
+      },{
+        "text": "文章编辑",
+        "icon": "nav-icon icon-note font-16",
+        "url": "javascript:ajax.view({url: 'html/application/aow/edit.html', containerId: 'container'});"
+      },{
+        "text": "培训排课",
+        "icon": "nav-icon icon-note font-16",
+        "url": "javascript:ajax.view({url: 'html/application/eveduler/schedule.html', containerId: 'container'});"
+      },{
+        "text": "客户聊天",
+        "icon": "nav-icon icon-note font-16",
+        "url": "javascript:ajax.view({url: 'html/application/gimessenger/chat.html', containerId: 'container'});"
+      },{
+        "text": "随访设计",
+        "icon": "nav-icon icon-note font-16",
+        "url": "javascript:ajax.view({url: 'html/application/surd/design.html', containerId: 'container'});"
+      },{
+        "text": "报表设计",
+        "icon": "nav-icon icon-note font-16",
+        "url": "javascript:ajax.view({url: 'html/application/report-designer/main.html', containerId: 'container'});"
+      },{
+        "text": "工作流设计",
+        "icon": "nav-icon icon-note font-16",
+        "url": "javascript:ajax.view({url: 'html/application/workflow/main.html', containerId: 'container'});"
+      },{
+        "text": "桌面应用设计",
+        "icon": "nav-icon icon-note font-16",
+        "url": "javascript:ajax.view({url: 'html/application/kesigner/desktop.html', containerId: 'container'});"
+      },{
+        "text": "手机应用设计",
+        "icon": "nav-icon icon-note font-16",
+        "url": "javascript:ajax.view({url: 'html/application/kesigner/mobile.html', containerId: 'container'});"
+      },{
+        "text": "叫号屏幕",
+        "icon": "nav-icon icon-note font-16",
+        "url": "javascript:ajax.view({url: 'html/application/loudtalk/screen.html', containerId: 'container'});"
+      },{
+        "text": "网络拓扑",
+        "icon": "nav-icon icon-note font-16",
+        "url": "javascript:ajax.view({url: 'html/application/network/dashboard.html', containerId: 'container'});"
+      },{
+        "text": "故事板",
+        "icon": "nav-icon icon-note font-16",
+        "url": "javascript:ajax.view({url: 'html/application/storyboard/storyboard.html', containerId: 'container'});"
+      }]
+    }]
+  },{
+    "title": "组件示例",
+    "menus": [{
+      "text": "单一示例",
+      "icon": "nav-icon fa fa-cubes",
+      "items": [{
+        "text": "信息表单",
+        "icon": "nav-icon icon-note",
+        "url": "javascript:ajax.view({url: 'html/widget/form/main.html', containerId: 'container'});"
+      },{
+        "text": "集合表格",
+        "icon": "nav-icon icon-note",
+        "url": "javascript:ajax.view({url: 'html/widget/table/main.html', containerId: 'container'});"
+      },{
+        "text": "分页栅格",
+        "icon": "nav-icon icon-note",
+        "url": "javascript:ajax.view({url: 'html/widget/grid/main.html', containerId: 'container'});"
+      },{
+        "text": "树型表格",
+        "icon": "nav-icon icon-note",
+        "url": "javascript:ajax.view({url: 'html/widget/treelike-table/demo.html', containerId: 'container'});"
+      },{
+        "text": "多选",
+        "icon": "nav-icon icon-note",
+        "url": "javascript:ajax.view({url: 'html/widget/multiselect.html', containerId: 'container'});"
+      },{
+        "text": "列表",
+        "icon": "nav-icon icon-note",
+        "url": "javascript:ajax.view({url: 'html/widget/list.html', containerId: 'container'});"
+      },{
+        "text": "DataSheet",
+        "icon": "nav-icon icon-note",
+        "url": "javascript:ajax.view({url: 'html/widget/datasheet.html', containerId: 'container'});"
+      },{
+        "text": "广义表A",
+        "icon": "nav-icon icon-note",
+        "url": "javascript:ajax.view({url: 'html/widget/spreadsheet.html', containerId: 'container'});"
+      },{
+        "text": "广义表B",
+        "icon": "nav-icon icon-note",
+        "url": "javascript:ajax.view({url: 'html/widget/spreadsheet2.html', containerId: 'container'});"
+      },{
+        "text": "图表",
+        "icon": "nav-icon icon-note",
+        "url": "javascript:ajax.view({url: 'html/widget/chart.html', containerId: 'container'});"
+      },{
+        "text": "特殊输入",
+        "icon": "nav-icon icon-note",
+        "url": "javascript:ajax.view({url: 'html/widget/input.html', containerId: 'container'});"
+      },{
+        "text": "特殊显示",
+        "icon": "nav-icon icon-note",
+        "url": "javascript:ajax.view({url: 'html/widget/display.html', containerId: 'container'});"
+      },{
+        "text": "分栏显示",
+        "icon": "nav-icon icon-note",
+        "url": "javascript:ajax.view({url: 'html/widget/splitter.html', containerId: 'container'});"
+      },{
+        "text": "泳道图示",
+        "icon": "nav-icon icon-note",
+        "url": "javascript:ajax.view({url: 'html/diagram/swimlane.html', containerId: 'container'});"
+      }]
+    },{
+      "text": "组合示例",
+      "icon": "nav-icon fa fa-cubes",
+      "items": [{
+        "text": "项目管理",
+        "icon": "nav-icon icon-note",
+        "url": "javascript:ajax.view({url: 'html/composite/project/list.html', containerId: 'container'});"
+      },{
+        "text": "客户概览",
+        "icon": "nav-icon icon-note",
+        "url": "javascript:ajax.view({url: 'html/composite/customer/profile.html', containerId: 'container'});"
+      },{
+        "text": "商机转换",
+        "icon": "nav-icon icon-note",
+        "url": "javascript:ajax.view({url: 'html/composite/contract/opportunity.html', containerId: 'container'});"
+      },{
+        "text": "网络管理",
+        "icon": "nav-icon icon-note",
+        "url": "javascript:ajax.view({url: 'html/composite/network/dashboard.html', containerId: 'container'});"
+      }]
+    },{
+      "text": "API示例",
+      "icon": "nav-icon fa fa-cubes",
+      "items": [{
+        "text": "DOM",
+        "icon": "nav-icon icon-note",
+        "url": "javascript:ajax.view({url: 'html/function/dom.html', containerId: 'container'});"
+      },{
+        "text": "ReactiveX",
+        "icon": "nav-icon icon-note",
+        "url": "javascript:ajax.view({url: 'html/function/rx.html', containerId: 'container'});"
+      },{
+        "text": "Couch",
+        "icon": "nav-icon icon-note",
+        "url": "javascript:ajax.view({url: 'html/function/couch.html', containerId: 'container'});"
+      }]
+    }]
+  },{
+    "title": "布局示例",
+    "menus": [{
+      "text": "列表布局",
+      "icon": "nav-icon fa fa-list",
+      "url": "javascript:ajax.view({url: 'html/layout/list.html', containerId: 'container'});"
+    },{
+      "text": "网格布局",
+      "icon": "nav-icon fa fa-th",
+      "url": "javascript:ajax.view({url: 'html/layout/grid.html', containerId: 'container'});"
+    }]
+  },{
+    "title": "页面示例",
+    "menus": [{
+      "text": "样式设计",
+      "icon": "nav-icon fa fa-industry",
+      "items": [{
+        "text": "文档归类",
+        "icon": "nav-icon fa fa-user",
+        "url": "javascript:ajax.view({url: 'html/design/document/category.html', containerId: 'container'});"
+      },{
+        "text": "项目团队",
+        "icon": "nav-icon fa fa-user",
+        "url": "javascript:ajax.view({url: 'html/design/team/members.html', containerId: 'container'});"
+      }]
+    },{
+      "text": "行业应用",
+      "icon": "nav-icon fa fa-industry",
+      "items": [{
+        "text": "人员信息",
+        "icon": "nav-icon fa fa-user",
+        "url": "javascript:ajax.view({url: 'html/business/person.html', containerId: 'container'});"
+      },{
+        "text": "水库概览",
+        "icon": "nav-icon fa fa-user",
+        "url": "javascript:ajax.view({url: 'html/common/list-statistics.html', containerId: 'container'});"
+      },{
+        "text": "水库列表",
+        "icon": "nav-icon fa fa-user",
+        "url": "javascript:ajax.view({url: 'html/common/list-general.html', containerId: 'container'});"
+      }]  
+    }]
+  },{
+    "title": "样式设计",
+    "menus": [{
+      "text": "设计规范",
+      "icon": "nav-icon fa fa-industry",
+      "items": [{
+        "text": "按钮",
+        "icon": "nav-icon fa fa-user",
+        "url": "javascript:ajax.view('widget/buttons.html', 'container');"
+      }]  
+    }]
+  }]
+}

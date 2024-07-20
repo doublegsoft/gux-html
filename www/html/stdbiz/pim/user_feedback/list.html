@@ -1,0 +1,154 @@
+<div id="pageUserFeedbackList" class="page">
+  <div class="page-header d-flex pl-3 pr-3" >
+    <strong>用户反馈</strong>
+    <div class="d-flex ms-auto">
+      <a widget-id="buttonAdd" class="btn btn-sm btn-outline-primary mr-2">新增用户反馈</a>
+    </div>
+  </div>
+  <div class="page-body">
+    <div widget-id="widgetTableUserFeedback"></div>
+  </div>
+</div>
+<script>
+function PageUserFeedbackList() {
+  this.page = dom.find('#pageUserFeedbackList');
+}
+
+PageUserFeedbackList.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  /*!
+  ** 跳转到【用户反馈】编辑页面
+  */
+  dom.bind(this.buttonAdd, 'click', ev => {
+    this.gotoEditUserFeedback({});
+  });
+  this.tableUserFeedback = new PaginationTable({
+    columns:[{
+      title: '搜索条件', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+      },
+    },{
+      title: '所有者', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+      },
+    },{
+      title: '内容', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+        td.innerHTML = row.cotnent;  
+      },
+    },{
+      title: '状态', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+      },
+    },{
+      title: '操作', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+        /*!
+        ** 编辑
+        */
+        let buttonEdit = dom.templatize(`
+          <a class="btn btn-sm btn-link">编辑</a>
+        `, row);
+        dom.bind(buttonEdit, 'click', ev => {
+          this.gotoEditUserFeedback(row);
+        }); 
+        td.appendChild(buttonEdit);
+        /*!
+        ** 详情
+        */
+        let buttonDetail = dom.templatize(`
+          <a class="btn btn-sm btn-link">详情</a>
+        `, row);
+        dom.bind(buttonDetail, 'click', ev => {
+          this.gotoDetailUserFeedback(row);
+        }); 
+        td.appendChild(buttonDetail);
+        /*!
+        ** 删除
+        */
+        let buttonDelete = dom.templatize(`
+          <a class="btn btn-sm btn-link">删除</a>
+        `, row);
+        dom.bind(buttonDelete, 'click', ev => {
+          dialog.confirm('确定删除该条信息？', () => {
+            this.doDeleteUserFeedback(row);
+          });      
+        }); 
+        td.appendChild(buttonDelete);
+      },
+    }],
+  });
+  this.tableUserFeedback.render(this.widgetTableUserFeedback);
+};
+
+/*!
+** 跳转到【用户反馈】编辑页面
+*/
+PageUserFeedbackList.prototype.gotoEditUserFeedback = function (model) {
+  ajax.sidebar({
+    url: 'html/stdbiz/pim/user_feedback/edit.html',
+    title: (model.userFeedbackName || '新增') + '信息',
+    actions: [{
+      title: '保存',
+      classes: 'btn btn-sm btn-primary',
+      onClick: ev => {
+        
+      },
+    },{
+      title: '关闭',
+      classes: 'btn btn-sm btn-success',
+      onClick: ev => { dom.close('sidebar'); },
+    }],
+    success: () => {
+      pageUserFeedbackEdit.show({
+        userFeedbackId: model.userFeedbackId,
+      });
+    },
+  });     
+};
+      
+/*!
+** 跳转到【用户反馈】详情页面
+*/
+PageUserFeedbackList.prototype.gotoDetailUserFeedback = function (model) {
+  ajax.overlay({
+    url: 'html/stdbiz/pim/user_feedback/detail.html',
+    title: model.userFeedbackName + '详情',
+    success: () => {
+      pageUserFeedbackDetail.show({
+        userFeedbackId: model.userFeedbackId,
+      });
+    },
+  });    
+};
+      
+/*!
+** 调用【用户反馈】删除接口
+*/
+PageUserFeedbackList.prototype.doDeleteUserFeedback = function (model) {
+  xhr.post({
+    url: '/api/v3/common/script/stdbiz/pim/user_feedback/delete',
+    params: {
+      userFeedbackId: model.userFeedbackId,
+    },
+  }).then(data => {
+  
+  });    
+};
+
+PageUserFeedbackList.prototype.destroy = function () {
+  delete pageUserFeedbackList;
+};
+
+PageUserFeedbackList.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageUserFeedbackList = new PageUserFeedbackList();
+</script>

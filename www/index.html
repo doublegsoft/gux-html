@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+<link rel="shortcut icon" href="img/favicon.png">
+<title>GUX桌面应用</title>
+<link rel="stylesheet" href="3rd/bootstrap/bootstrap.min.css">
+<link rel="stylesheet" href="3rd/fontawesome/css/all.min.css">
+<link rel="stylesheet" href="3rd/vanillajs-datepicker/css/datepicker.min.css">
+<link rel="stylesheet" href="3rd/vanillajs-datepicker/css/datepicker-bs5.min.css">
+<link rel="stylesheet" href="3rd/slimselect/slimselect.css">
+<link rel="stylesheet" href="3rd/codemirror/codemirror.css">
+<link rel="stylesheet" href="3rd/layui/css/layui.css">
+<link rel="stylesheet" href="css/gux.css">
+<link rel="stylesheet" href="css/style.css">
+</head>
+
+<body id="body" data-t class="app header-fixed sidebar-fixed aside-menu-fixed sidebar-lg-show" style="overflow-y: hidden">
+  <header class="gx-d-flex">
+    <a class="navbar-brand" href="#">
+      <img class="navbar-brand-full" src="img/banner.png" width="93" height="64">
+    </a>
+    <ul class="gx-d-flex gx-my-0 gx-ml-auto">
+      <li class="nav-item d-md-down-none"> 
+        <a class="nav-link" href="#"> 
+          <i id="alarm_notification" class="icon-bell"></i> 
+        </a> 
+      </li>
+      <li class="nav-item d-md-down-none"> 
+        <a class="nav-link" href="#"><i class="icon-list"></i></a> 
+      </li>
+      <li class="nav-item d-md-down-none"> 
+        <a class="nav-link" href="#"><i class="icon-location-pin"></i></a> 
+      </li>
+      <li class="gx-pr-16">
+        <div class="btn-group">
+          <a class="gx-lh-64" href="#" data-bs-toggle="dropdown" aria-expanded="false">
+            <img id="avatar" src="img/user.png" class="gx-wh-48 gx-b-r50">
+            <span class="gx-pl-8">管理员</span>
+          </a>
+          <div class="dropdown-menu dropdown-menu-right">
+            <div class="dropdown-header text-center"> 
+              <strong>账户信息</strong> 
+            </div>
+            <a class="dropdown-item" href="#">
+              <i class="fa fa-bell-o"></i>新消息<span class="badge badge-info">42</span>
+            </a>
+            <a class="dropdown-item" href="#">
+              <i class="fa fa-tasks"></i>工作任务
+              <span class="badge badge-danger">42</span>
+            </a> 
+            <div class="dropdown-header text-center"> 
+              <strong>设置</strong> 
+            </div>
+            <a class="dropdown-item" href="javascript:gotoPersonalInformation();">
+              <i class="fa fa-user"></i>个人信息
+            </a> 
+            <a class="dropdown-item" href="javascript:changePassword();">
+              <i class="fa fa-file"></i>修改密码
+            </a>
+            <div class="divider"></div>
+            <a class="dropdown-item" href="javascript:logout()">
+              <i class="fa fa-lock"></i>退出
+            </a> 
+          </div>
+        </div>
+      </li>
+    </ul>
+  </header>
+  
+  <div class="app-body">
+    <!-- side menu -->
+    <div class="sidemenu">
+      <nav id="sidemenu"></nav>
+    </div>
+    <main class="main">
+      <div id="container" class="overflow-y: auto;"></div>
+    </main>
+  </div>
+</body>
+</html>
+
+<script src="3rd/bootstrap/bootstrap.bundle.min.js"></script>
+<script src="3rd/handlebars/handlebars-v4.0.11.js"></script>
+<script src="3rd/moment/moment.min.js"></script>
+<script src="3rd/codemirror/codemirror.js"></script>
+<script src="3rd/codemirror/mode/xml/xml.js"></script>
+<script src="3rd/codemirror/mode/javascript/javascript.js"></script>
+<script src="3rd/vanillajs-datepicker/js/datepicker-full.min.js"></script>
+<script src="3rd/vanillajs-datepicker/js/locales/zh-CN.js"></script>
+<script src="3rd/slimselect/slimselect.umd.min.js"></script>
+<script src="3rd/layui/layui.js"></script>
+
+<script src="js/common/utils.js"></script>
+<script src="js/common/xhr.js"></script>
+<script src="js/common/dom.js"></script>
+<script src="js/common/ajax.js"></script>
+<script src="js/common/dialog.js"></script>
+<script src="js/common/validation.js"></script>
+
+<script src="js/widget/CascadeSelect.js"></script>
+<script src="js/widget/Medias.js"></script>
+<script src="js/widget/EditableForm.js"></script>
+<script src="js/widget/QueryLayout.js"></script>
+<script src="js/widget/PaginationTable.js"></script>
+<script src="js/widget/PaginationGrid.js"></script>
+
+<script id="sidemenu-template" type="text/x-handlebars-template">
+<ul class="nav">
+  {{#if home}}
+  <li class="nav-item">
+    <a class="nav-link" href="{{home.url}}">
+      <i class="{{home.icon}}"></i>{{home.text}}
+    </a>
+  </li>
+  {{/if}}
+  {{#each groups}}
+  <li class="nav-title">{{title}}</li>
+    {{#each menus}}
+      {{#if url}}
+  <li class="nav-item">
+    <a class="nav-link" href="{{url}}">
+      <span style="padding-left: 16px"></span>
+      <i class="{{icon}}"></i>{{text}}
+    </a>
+  </li>
+    {{else}}
+  <li class="nav-item nav-dropdown"> 
+    <a class="nav-link nav-dropdown-toggle" href="#">
+      <i class="{{icon}}"></i>{{text}}
+    </a>
+    <ul class="nav-dropdown-items">
+        {{#each items}}
+      <li class="nav-item"> 
+        <a class="nav-link" href="{{url}}">
+          <span style="padding-left: 16px"></span>
+          <i class="{{icon}} position-relative" style="top: 1px;"></i>{{text}}
+        </a> 
+      </li>
+        {{/each}}
+    </ul>
+  </li>
+      {{/if}}
+    {{/each}}
+  {{/each}}
+</ul>
+</script>
+<script>
+/*!
+** 加载菜单
+*/
+xhr.post({
+  url: 'data/menu.json',
+}).then(data => {
+  var source = document.getElementById('sidemenu-template').innerHTML;
+  var template = Handlebars.compile(source);
+  var html = template(data);
+  let sidemenu = dom.find('#sidemenu');
+  sidemenu.innerHTML = html;
+  // 由于后加载数据，所以事件无法由bootstrap加载，只能自己加载
+  sidemenu.querySelectorAll('.nav-dropdown').forEach(el => {
+    el.onclick = ev => {
+      var dropdown = ev.target.parentElement;
+      if (dropdown.classList.contains('open')) {
+        dropdown.classList.remove('open');
+      } else {
+        dropdown.classList.add('open');
+      }
+    }
+  });
+});
+</script>

@@ -1,0 +1,26 @@
+<div id="pageAssignmentSelect" class="page">
+  <div class="page-body">
+    
+  </div>
+</div>
+<script>
+function PageAssignmentSelect() {
+  this.page = dom.find('#pageAssignmentSelect');
+}
+
+PageAssignmentSelect.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  
+};
+
+PageAssignmentSelect.prototype.destroy = function () {
+  delete pageAssignmentSelect;
+};
+
+PageAssignmentSelect.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageAssignmentSelect = new PageAssignmentSelect();
+</script>

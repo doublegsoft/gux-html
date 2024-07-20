@@ -1,0 +1,27 @@
+<div id="pageTabSocialMediaAccount" class="page">
+  <div class="page-header d-flex pl-3 pr-3" >
+    <strong>社交媒体账号</strong>
+  </div>
+  <div class="page-body">
+  </div>
+</div>
+<script>
+function PageTabSocialMediaAccount() {
+  this.page = dom.find('#pageTabSocialMediaAccount');
+}
+
+PageTabSocialMediaAccount.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+};
+
+PageTabSocialMediaAccount.prototype.destroy = function () {
+  delete pageTabSocialMediaAccount;
+};
+
+PageTabSocialMediaAccount.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageTabSocialMediaAccount = new PageTabSocialMediaAccount();
+</script>

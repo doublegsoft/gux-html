@@ -1,0 +1,26 @@
+<div id="pageTodoDetail" class="page">
+  <div class="page-body">
+    
+  </div>
+</div>
+<script>
+function PageTodoDetail() {
+  this.page = dom.find('#pageTodoDetail');
+}
+
+PageTodoDetail.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  
+};
+
+PageTodoDetail.prototype.destroy = function () {
+  delete pageTodoDetail;
+};
+
+PageTodoDetail.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageTodoDetail = new PageTodoDetail();
+</script>

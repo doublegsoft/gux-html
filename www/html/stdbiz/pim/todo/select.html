@@ -1,0 +1,26 @@
+<div id="pageTodoSelect" class="page">
+  <div class="page-body">
+    
+  </div>
+</div>
+<script>
+function PageTodoSelect() {
+  this.page = dom.find('#pageTodoSelect');
+}
+
+PageTodoSelect.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  
+};
+
+PageTodoSelect.prototype.destroy = function () {
+  delete pageTodoSelect;
+};
+
+PageTodoSelect.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageTodoSelect = new PageTodoSelect();
+</script>

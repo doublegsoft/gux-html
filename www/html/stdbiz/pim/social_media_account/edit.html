@@ -1,0 +1,82 @@
+<div id="pageSocialMediaAccountEdit" class="page">
+  <div class="page-body">
+    <div widget-id="widgetFormSocialMediaAccount"></div>
+  </div>
+</div>
+<script>
+function PageSocialMediaAccountEdit() {
+  this.page = dom.find('#pageSocialMediaAccountEdit');
+}
+
+PageSocialMediaAccountEdit.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  this.formSocialMediaAccount = new EditableForm({
+    fields:[{
+      name: 'socialMediaAccountId',     
+      title: '', 
+      input: 'hidden',
+    },{
+      name: 'personId',     
+      title: '个人', 
+      input: 'select',
+      options: {
+        url: '', 
+        fields: {text: 'personName', vallue: 'personId'},
+      },  
+    },{
+      name: 'avatar',     
+      title: '头像', 
+      input: 'longtext',
+    },{
+      name: 'socialMediaAccountName',     
+      title: '账户名称', 
+      input: 'text',
+    },{
+      name: 'socialMediaAccountType',     
+      title: '账户名称', 
+      input: 'text',
+    },{
+      name: 'realName',     
+      title: '真实姓名', 
+      input: 'text',
+    },{
+      name: 'birthDate',     
+      title: '出生日期', 
+      input: 'date',
+    },{
+      name: 'genderCode',     
+      title: '性别', 
+      input: 'select',
+      options: {
+        values: [{
+          text: '选项A', value: 'A',
+        },{
+          text: '选项B', value: 'B',
+        },{
+          text: '选项C', value: 'C',
+        }],     
+      },  
+    },{
+      name: 'idCardNumber',     
+      title: '身份证号', 
+      input: 'text',
+    },{
+      name: 'mobile',     
+      title: '手机号', 
+      input: 'mobile',
+    }],
+  });
+  this.formSocialMediaAccount.render(this.widgetFormSocialMediaAccount);
+};
+
+PageSocialMediaAccountEdit.prototype.destroy = function () {
+  delete pageSocialMediaAccountEdit;
+};
+
+PageSocialMediaAccountEdit.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageSocialMediaAccountEdit = new PageSocialMediaAccountEdit();
+</script>

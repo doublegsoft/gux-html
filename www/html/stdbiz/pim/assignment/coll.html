@@ -1,0 +1,52 @@
+<div id="pageAssignmentColl" class="page">
+  <div class="page-header d-flex pl-3 pr-3" >
+    <strong>下发任务</strong>
+    <div class="d-flex ms-auto">
+      <a widget-id="buttonAdd" class="btn btn-sm btn-outline-primary mr-2">新增下发任务</a>
+    </div>
+  </div>
+  <div class="page-body">
+    
+  </div>
+</div>
+<script>
+function PageAssignmentColl() {
+  this.page = dom.find('#pageAssignmentColl');
+}
+
+PageAssignmentColl.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  /*!
+  ** 跳转到【下发任务】编辑页面
+  */
+  dom.bind(this.buttonAdd, 'click', ev => {
+    this.gotoEditAssignment({});
+  });
+  
+};
+
+PageAssignmentColl.prototype.buildTile4AssignmentColl = function (row) {
+  let ret = dom.templatize(`
+    <div class="d-flex">
+      <div>  
+        <div class="gx-text-primary">{{assignmentName}}</div>
+      </div>  
+      <div>
+        <div class="gx-fs-16 gx-fb">{{status}}</div>
+      </div>  
+    </div>
+  `, row);
+  return ret;
+};
+
+PageAssignmentColl.prototype.destroy = function () {
+  delete pageAssignmentColl;
+};
+
+PageAssignmentColl.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageAssignmentColl = new PageAssignmentColl();
+</script>

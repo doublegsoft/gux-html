@@ -1,0 +1,54 @@
+<div id="pageCartEdit" class="page">
+  <div class="page-body">
+    <div widget-id="widgetFormCart"></div>
+  </div>
+</div>
+<script>
+function PageCartEdit() {
+  this.page = dom.find('#pageCartEdit');
+}
+
+PageCartEdit.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  this.formCart = new EditableForm({
+    fields:[{
+      name: 'cartId',     
+      title: '评论', 
+      input: 'hidden',
+    },{
+      name: 'parent',     
+      title: '上级评论', 
+      input: 'text',
+    },{
+      name: 'cotnent',     
+      title: '内容', 
+      input: 'text',
+    },{
+      name: 'status',     
+      title: '状态', 
+      input: 'select',
+      options: {
+        values: [{
+          text: '选项A', value: 'A',
+        },{
+          text: '选项B', value: 'B',
+        },{
+          text: '选项C', value: 'C',
+        }],     
+      },  
+    }],
+  });
+  this.formCart.render(this.widgetFormCart);
+};
+
+PageCartEdit.prototype.destroy = function () {
+  delete pageCartEdit;
+};
+
+PageCartEdit.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageCartEdit = new PageCartEdit();
+</script>

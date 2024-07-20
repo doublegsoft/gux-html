@@ -1,0 +1,26 @@
+<div id="pageConversationSelect" class="page">
+  <div class="page-body">
+    
+  </div>
+</div>
+<script>
+function PageConversationSelect() {
+  this.page = dom.find('#pageConversationSelect');
+}
+
+PageConversationSelect.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  
+};
+
+PageConversationSelect.prototype.destroy = function () {
+  delete pageConversationSelect;
+};
+
+PageConversationSelect.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageConversationSelect = new PageConversationSelect();
+</script>

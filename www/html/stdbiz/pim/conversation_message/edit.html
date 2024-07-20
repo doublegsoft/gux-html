@@ -1,0 +1,62 @@
+<div id="pageConversationMessageEdit" class="page">
+  <div class="page-body">
+    <div widget-id="widgetFormConversationMessage"></div>
+  </div>
+</div>
+<script>
+function PageConversationMessageEdit() {
+  this.page = dom.find('#pageConversationMessageEdit');
+}
+
+PageConversationMessageEdit.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  this.formConversationMessage = new EditableForm({
+    fields:[{
+      name: 'conversationMessageId',     
+      title: '会话', 
+      input: 'hidden',
+    },{
+      name: 'conversationId',     
+      title: '会话', 
+      input: 'select',
+      options: {
+        url: '', 
+        fields: {text: 'conversationName', vallue: 'conversationId'},
+      },  
+    },{
+      name: 'messageType',     
+      title: '消息内容', 
+      input: 'text',
+    },{
+      name: 'messageContent',     
+      title: '消息内容', 
+      input: 'text',
+    },{
+      name: 'status',     
+      title: '附加选项', 
+      input: 'select',
+      options: {
+        values: [{
+          text: '选项A', value: 'A',
+        },{
+          text: '选项B', value: 'B',
+        },{
+          text: '选项C', value: 'C',
+        }],     
+      },  
+    }],
+  });
+  this.formConversationMessage.render(this.widgetFormConversationMessage);
+};
+
+PageConversationMessageEdit.prototype.destroy = function () {
+  delete pageConversationMessageEdit;
+};
+
+PageConversationMessageEdit.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageConversationMessageEdit = new PageConversationMessageEdit();
+</script>

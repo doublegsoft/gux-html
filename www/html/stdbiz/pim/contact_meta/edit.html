@@ -1,0 +1,69 @@
+<div id="pageContactMetaEdit" class="page">
+  <div class="page-body">
+    <div widget-id="widgetFormContactMeta"></div>
+  </div>
+</div>
+<script>
+function PageContactMetaEdit() {
+  this.page = dom.find('#pageContactMetaEdit');
+}
+
+PageContactMetaEdit.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  this.formContactMeta = new EditableForm({
+    fields:[{
+      name: 'contactMetaCode',     
+      title: '产品附加', 
+      input: 'hidden',
+    },{
+      name: 'productContactId',     
+      title: '产品', 
+      input: 'hidden',
+    },{
+      name: 'contactId',     
+      title: '联系人', 
+      input: 'hidden',
+    },{
+      name: 'contactName',     
+      title: '联系人', 
+      input: 'text',
+    },{
+      name: 'position',     
+      title: '职位', 
+      input: 'text',
+    },{
+      name: 'mobile',     
+      title: '手机号码', 
+      input: 'mobile',
+    },{
+      name: 'email',     
+      title: '电子邮箱', 
+      input: 'email',
+    },{
+      name: 'note',     
+      title: '说明', 
+      input: 'longtext',
+    },{
+      name: 'contactMetaName',     
+      title: '附加名称', 
+      input: 'text',
+    },{
+      name: 'content',     
+      title: '内容', 
+      input: 'text',
+    }],
+  });
+  this.formContactMeta.render(this.widgetFormContactMeta);
+};
+
+PageContactMetaEdit.prototype.destroy = function () {
+  delete pageContactMetaEdit;
+};
+
+PageContactMetaEdit.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageContactMetaEdit = new PageContactMetaEdit();
+</script>

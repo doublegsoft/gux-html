@@ -1,0 +1,58 @@
+<div id="pageConversationEdit" class="page">
+  <div class="page-body">
+    <div widget-id="widgetFormConversation"></div>
+  </div>
+</div>
+<script>
+function PageConversationEdit() {
+  this.page = dom.find('#pageConversationEdit');
+}
+
+PageConversationEdit.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  this.formConversation = new EditableForm({
+    fields:[{
+      name: 'conversationId',     
+      title: '会话', 
+      input: 'hidden',
+    },{
+      name: 'conversationName',     
+      title: '会话名称', 
+      input: 'text',
+    },{
+      name: 'conversationType',     
+      title: '会话类型', 
+      input: 'text',
+    },{
+      name: 'unreadCount',     
+      title: '未读消息数量', 
+      input: 'text',
+    },{
+      name: 'status',     
+      title: '业务状态', 
+      input: 'select',
+      options: {
+        values: [{
+          text: '选项A', value: 'A',
+        },{
+          text: '选项B', value: 'B',
+        },{
+          text: '选项C', value: 'C',
+        }],     
+      },  
+    }],
+  });
+  this.formConversation.render(this.widgetFormConversation);
+};
+
+PageConversationEdit.prototype.destroy = function () {
+  delete pageConversationEdit;
+};
+
+PageConversationEdit.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageConversationEdit = new PageConversationEdit();
+</script>

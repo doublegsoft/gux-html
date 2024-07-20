@@ -1,0 +1,26 @@
+<div id="pageCartDetail" class="page">
+  <div class="page-body">
+    
+  </div>
+</div>
+<script>
+function PageCartDetail() {
+  this.page = dom.find('#pageCartDetail');
+}
+
+PageCartDetail.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  
+};
+
+PageCartDetail.prototype.destroy = function () {
+  delete pageCartDetail;
+};
+
+PageCartDetail.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageCartDetail = new PageCartDetail();
+</script>

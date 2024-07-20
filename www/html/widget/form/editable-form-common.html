@@ -1,0 +1,102 @@
+<div id="pageFormCommon" class="page">
+  <div class="page-body">
+    <div widget-id="widgetFormCommon"></div>
+  </div>
+</div>
+<script>
+function PageFormCommon() {
+  this.page = dom.find('#pageFormCommon');
+}
+
+PageFormCommon.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  this.formCommon = new EditableForm({
+    fields:[{
+      name: "personId",     
+      title: "个人", 
+      input: "hidden",
+    },{
+      name: "personName",     
+      title: "姓名", 
+      input: "text",
+      required: true,
+    },{
+      name: "idCardTypeCode",     
+      title: "性别", 
+      input: "select",
+      options: {
+        values: [{
+          text: '男性', value: 'M',
+        },{
+          text: '女性', value: 'F',
+        }],     
+      },  
+    },{
+      name: "birthDate",     
+      title: "出生日期", 
+      input: "date",
+    },{
+      name: "mobile",     
+      title: "手机号", 
+      input: "mobile",
+    },{
+      title: '月薪',
+      name: 'salary',
+      required: true,
+      input: 'number',
+    },{
+      title: '工作视频',
+      name: 'videos',
+      required: false,
+      input: 'videos',
+      options: {
+        width: 90,
+      },
+    },{
+      title: '上级领导',
+      name: 'anyCascade',
+      input: 'cascade',
+      required: true,
+      options: {
+        levels: [{
+          name: 'departmentId',
+          fields: {
+            value: 'id',
+            text: 'name'
+          },
+          text: '部门',
+          width: 'calc(49% - 3px)',
+          url: 'data/biz/departments.json',
+        },{
+          name: 'employeeId',
+          fields: {
+            value: 'id',
+            text: 'name'
+          },
+          text: '领导',
+          width: 'calc(49% - 3px)',
+          url: 'data/biz/emplyees.json'
+        }]
+      }
+    },{
+      title: '备注',
+      name: 'note',
+      input: 'longtext',
+    }],
+    onSave: (data) => {
+    },
+  });
+  this.formCommon.render(this.widgetFormCommon);
+};
+
+PageFormCommon.prototype.destroy = function () {
+  delete pageContactEdit;
+};
+
+PageFormCommon.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageFormCommon = new PageFormCommon();
+</script>

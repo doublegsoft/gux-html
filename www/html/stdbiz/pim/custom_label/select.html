@@ -1,0 +1,26 @@
+<div id="pageCustomLabelSelect" class="page">
+  <div class="page-body">
+    
+  </div>
+</div>
+<script>
+function PageCustomLabelSelect() {
+  this.page = dom.find('#pageCustomLabelSelect');
+}
+
+PageCustomLabelSelect.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  
+};
+
+PageCustomLabelSelect.prototype.destroy = function () {
+  delete pageCustomLabelSelect;
+};
+
+PageCustomLabelSelect.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageCustomLabelSelect = new PageCustomLabelSelect();
+</script>

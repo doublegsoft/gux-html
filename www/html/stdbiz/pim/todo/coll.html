@@ -1,0 +1,61 @@
+<div id="pageTodoColl" class="page">
+  <div class="page-header d-flex pl-3 pr-3" >
+    <strong>待办事项信息</strong>
+    <div class="d-flex ms-auto">
+      <a widget-id="buttonAdd" class="btn btn-sm btn-outline-primary mr-2">新增待办事项信息</a>
+    </div>
+  </div>
+  <div class="page-body">
+    
+  </div>
+</div>
+<script>
+function PageTodoColl() {
+  this.page = dom.find('#pageTodoColl');
+}
+
+PageTodoColl.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  /*!
+  ** 跳转到【待办事项信息】编辑页面
+  */
+  dom.bind(this.buttonAdd, 'click', ev => {
+    this.gotoEditTodo({});
+  });
+  
+};
+
+PageTodoColl.prototype.buildTile4TodoColl = function (row) {
+  let ret = dom.templatize(`
+    <div>
+      <div class="d-flex">
+        <div>  
+          <div class="gx-text-primary">{{todoName}}</div>
+          <div class="gx-text-secondary">{{personId}}</div>
+        </div>  
+        <div>
+          <div class="gx-fs-16 gx-fb">{{status}}</div>
+        </div>  
+      </div>
+      <div class="d-flex">
+        <div class="d-flex">
+          <i class="fas fa-star"></i>
+          <span class="ms-auto">{{ordinalPosition}}</span>
+        </div>
+      </div>
+    </div>
+  `, row);
+  return ret;
+};
+
+PageTodoColl.prototype.destroy = function () {
+  delete pageTodoColl;
+};
+
+PageTodoColl.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageTodoColl = new PageTodoColl();
+</script>

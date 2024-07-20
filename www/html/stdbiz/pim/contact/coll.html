@@ -1,0 +1,49 @@
+<div id="pageContactColl" class="page">
+  <div class="page-header d-flex pl-3 pr-3" >
+    <strong>联系人基本信息</strong>
+    <div class="d-flex ms-auto">
+      <a widget-id="buttonAdd" class="btn btn-sm btn-outline-primary mr-2">新增联系人基本信息</a>
+    </div>
+  </div>
+  <div class="page-body">
+    
+  </div>
+</div>
+<script>
+function PageContactColl() {
+  this.page = dom.find('#pageContactColl');
+}
+
+PageContactColl.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  /*!
+  ** 跳转到【联系人基本信息】编辑页面
+  */
+  dom.bind(this.buttonAdd, 'click', ev => {
+    this.gotoEditContact({});
+  });
+  
+};
+
+PageContactColl.prototype.buildTile4ContactColl = function (row) {
+  let ret = dom.templatize(`
+    <div class="d-flex">
+      <div>  
+        <div class="gx-text-primary">{{contactName}}</div>
+      </div>  
+    </div>
+  `, row);
+  return ret;
+};
+
+PageContactColl.prototype.destroy = function () {
+  delete pageContactColl;
+};
+
+PageContactColl.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageContactColl = new PageContactColl();
+</script>

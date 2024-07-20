@@ -1,0 +1,58 @@
+<div id="pageSearchCriterionEdit" class="page">
+  <div class="page-body">
+    <div widget-id="widgetFormSearchCriterion"></div>
+  </div>
+</div>
+<script>
+function PageSearchCriterionEdit() {
+  this.page = dom.find('#pageSearchCriterionEdit');
+}
+
+PageSearchCriterionEdit.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  this.formSearchCriterion = new EditableForm({
+    fields:[{
+      name: 'searchCriterionId',     
+      title: '搜索条件', 
+      input: 'hidden',
+    },{
+      name: 'ownerPersonId',     
+      title: '所有者', 
+      input: 'select',
+      options: {
+        url: '', 
+        fields: {text: 'ownerPersonName', vallue: 'ownerPersonId'},
+      },  
+    },{
+      name: 'cotnent',     
+      title: '内容', 
+      input: 'text',
+    },{
+      name: 'status',     
+      title: '状态', 
+      input: 'select',
+      options: {
+        values: [{
+          text: '选项A', value: 'A',
+        },{
+          text: '选项B', value: 'B',
+        },{
+          text: '选项C', value: 'C',
+        }],     
+      },  
+    }],
+  });
+  this.formSearchCriterion.render(this.widgetFormSearchCriterion);
+};
+
+PageSearchCriterionEdit.prototype.destroy = function () {
+  delete pageSearchCriterionEdit;
+};
+
+PageSearchCriterionEdit.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageSearchCriterionEdit = new PageSearchCriterionEdit();
+</script>

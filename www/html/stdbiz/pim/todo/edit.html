@@ -1,0 +1,78 @@
+<div id="pageTodoEdit" class="page">
+  <div class="page-body">
+    <div widget-id="widgetFormTodo"></div>
+  </div>
+</div>
+<script>
+function PageTodoEdit() {
+  this.page = dom.find('#pageTodoEdit');
+}
+
+PageTodoEdit.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  this.formTodo = new EditableForm({
+    fields:[{
+      name: 'todoId',     
+      title: '待办事项', 
+      input: 'hidden',
+    },{
+      name: 'personId',     
+      title: '人员', 
+      input: 'select',
+      options: {
+        url: '', 
+        fields: {text: 'personName', vallue: 'personId'},
+      },  
+    },{
+      name: 'todoName',     
+      title: '待办事项名称', 
+      input: 'text',
+    },{
+      name: 'todoType',     
+      title: '类型', 
+      input: 'text',
+    },{
+      name: 'priority',     
+      title: '优先级', 
+      input: 'text',
+    },{
+      name: 'deadline',     
+      title: '底线日期', 
+      input: 'date',
+    },{
+      name: 'status',     
+      title: '业务状态', 
+      input: 'select',
+      options: {
+        values: [{
+          text: '选项A', value: 'A',
+        },{
+          text: '选项B', value: 'B',
+        },{
+          text: '选项C', value: 'C',
+        }],     
+      },  
+    },{
+      name: 'note',     
+      title: '说明', 
+      input: 'longtext',
+    },{
+      name: 'ordinalPosition',     
+      title: '排序', 
+      input: 'text',
+    }],
+  });
+  this.formTodo.render(this.widgetFormTodo);
+};
+
+PageTodoEdit.prototype.destroy = function () {
+  delete pageTodoEdit;
+};
+
+PageTodoEdit.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageTodoEdit = new PageTodoEdit();
+</script>

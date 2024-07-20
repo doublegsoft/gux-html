@@ -1,0 +1,46 @@
+<div id="pageUserFeedbackColl" class="page">
+  <div class="page-header d-flex pl-3 pr-3" >
+    <strong>用户反馈</strong>
+    <div class="d-flex ms-auto">
+      <a widget-id="buttonAdd" class="btn btn-sm btn-outline-primary mr-2">新增用户反馈</a>
+    </div>
+  </div>
+  <div class="page-body">
+    
+  </div>
+</div>
+<script>
+function PageUserFeedbackColl() {
+  this.page = dom.find('#pageUserFeedbackColl');
+}
+
+PageUserFeedbackColl.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  /*!
+  ** 跳转到【用户反馈】编辑页面
+  */
+  dom.bind(this.buttonAdd, 'click', ev => {
+    this.gotoEditUserFeedback({});
+  });
+  
+};
+
+PageUserFeedbackColl.prototype.buildTile4UserFeedbackColl = function (row) {
+  let ret = dom.templatize(`
+    <div class="d-flex">
+    </div>
+  `, row);
+  return ret;
+};
+
+PageUserFeedbackColl.prototype.destroy = function () {
+  delete pageUserFeedbackColl;
+};
+
+PageUserFeedbackColl.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageUserFeedbackColl = new PageUserFeedbackColl();
+</script>

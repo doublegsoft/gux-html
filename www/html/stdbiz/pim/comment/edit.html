@@ -1,0 +1,54 @@
+<div id="pageCommentEdit" class="page">
+  <div class="page-body">
+    <div widget-id="widgetFormComment"></div>
+  </div>
+</div>
+<script>
+function PageCommentEdit() {
+  this.page = dom.find('#pageCommentEdit');
+}
+
+PageCommentEdit.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  this.formComment = new EditableForm({
+    fields:[{
+      name: 'commentId',     
+      title: '评论', 
+      input: 'hidden',
+    },{
+      name: 'parent',     
+      title: '上级评论', 
+      input: 'text',
+    },{
+      name: 'content',     
+      title: '内容', 
+      input: 'text',
+    },{
+      name: 'status',     
+      title: '状态', 
+      input: 'select',
+      options: {
+        values: [{
+          text: '选项A', value: 'A',
+        },{
+          text: '选项B', value: 'B',
+        },{
+          text: '选项C', value: 'C',
+        }],     
+      },  
+    }],
+  });
+  this.formComment.render(this.widgetFormComment);
+};
+
+PageCommentEdit.prototype.destroy = function () {
+  delete pageCommentEdit;
+};
+
+PageCommentEdit.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageCommentEdit = new PageCommentEdit();
+</script>

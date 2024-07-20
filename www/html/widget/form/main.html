@@ -1,0 +1,80 @@
+<div id="pageFormDemo" class="page">
+  <div class="card">
+    <div class="card-header d-flex pl-3 pr-3" >
+      <strong>示例：调用侧边表单</strong>
+      <div class="d-flex ms-auto">
+        <button widget-id="buttonSidebarCommon" class="btn btn-sm btn-outline-primary mr-2">调用侧边表单</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <textarea id="longtextCommon"></textarea>
+    </div>
+  </div>
+  <div class="card mt-3">
+    <div class="card-header d-flex pl-3 pr-3" >
+      <strong>示例：STDBIZ测试</strong>
+      <div class="d-flex ms-auto">
+        <button widget-id="buttonSidebarContact" class="btn btn-sm btn-outline-primary mr-2">新增联系人</button>
+      </div>
+    </div>
+    <div class="card-body">
+      <textarea id="longtextStdbizPimContact"></textarea>
+    </div>
+  </div>
+</div>
+
+<script>
+
+(async function() {
+  this.page = dom.find('#pageFormDemo');
+  dom.init(this, this.page);
+  
+  let codeview = CodeMirror.fromTextArea(dom.find('#longtextCommon'), {
+    mode: 'javascript',
+    lineNumbers: true,
+    editable: false,
+    tabSize: 2,
+    background: '#565656',
+  });
+  codeview.setSize('100%', 360);
+  let html = await xhr.get({url:'html/widget/form/editable-form-common.html'});
+  codeview.setValue(html);
+  
+  dom.bind(this.buttonSidebarCommon, 'click', ev => {
+    ajax.sidebar({
+      url: 'html/widget/form/editable-form-common.html',
+      title: '表单信息',
+      actions: [{
+        title: '保存',
+      },{
+        title: '关闭',
+      }],
+      success: () => {
+        pageFormCommon.show({});
+      }
+    });
+  });
+  
+  codeview = CodeMirror.fromTextArea(dom.find('#longtextStdbizPimContact'), {
+    mode: 'javascript',
+    lineNumbers: true,
+    editable: false,
+    tabSize: 2,
+    background: '#565656',
+  });
+  codeview.setSize('100%', 360);
+  html = await xhr.get({url:'html/widget/form/editable-form-contact.html'});
+  codeview.setValue(html);
+  
+  dom.bind(this.buttonSidebarContact, 'click', ev => {
+    ajax.sidebar({
+      url: 'html/widget/form/editable-form-contact.html',
+      title: '表单信息',
+      success: () => {
+        pageContactEdit.show({});
+      }
+    });
+  });
+})();
+</script>
+

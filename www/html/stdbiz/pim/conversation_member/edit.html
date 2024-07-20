@@ -1,0 +1,66 @@
+<div id="pageConversationMemberEdit" class="page">
+  <div class="page-body">
+    <div widget-id="widgetFormConversationMember"></div>
+  </div>
+</div>
+<script>
+function PageConversationMemberEdit() {
+  this.page = dom.find('#pageConversationMemberEdit');
+}
+
+PageConversationMemberEdit.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  this.formConversationMember = new EditableForm({
+    fields:[{
+      name: 'conversationId',     
+      title: '会话', 
+      input: 'hidden',
+    },{
+      name: 'conversationId',     
+      title: '会话', 
+      input: 'hidden',
+    },{
+      name: 'conversationName',     
+      title: '会话名称', 
+      input: 'text',
+    },{
+      name: 'conversationType',     
+      title: '会话类型', 
+      input: 'text',
+    },{
+      name: 'unreadCount',     
+      title: '未读消息数量', 
+      input: 'text',
+    },{
+      name: 'lastConversationTime',     
+      title: '最近会话时间', 
+      input: 'date',
+    },{
+      name: 'status',     
+      title: '业务状态', 
+      input: 'select',
+      options: {
+        values: [{
+          text: '选项A', value: 'A',
+        },{
+          text: '选项B', value: 'B',
+        },{
+          text: '选项C', value: 'C',
+        }],     
+      },  
+    }],
+  });
+  this.formConversationMember.render(this.widgetFormConversationMember);
+};
+
+PageConversationMemberEdit.prototype.destroy = function () {
+  delete pageConversationMemberEdit;
+};
+
+PageConversationMemberEdit.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageConversationMemberEdit = new PageConversationMemberEdit();
+</script>

@@ -1,0 +1,78 @@
+<div id="pageTableDemo" class="page">
+  <div class="card">
+    <div class="card-header d-flex pl-3 pr-3" >
+      <strong>示例：基本表格</strong>
+      <div class="d-flex ms-auto">
+        <a class="btn btn-sm btn-link mr-2"><i class="far fa-window-maximize"></i></a>
+        <a class="btn btn-sm btn-link"><i class="fas fa-code"></i></a>
+      </div>
+    </div>
+    <div  class="card-body">
+      <div widget-id="widgetTableCommonLive"></div>
+      <div widget-id="widgetTableCommonCode" style="display: none;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+(async function() {
+  this.page = dom.find('#pageTableDemo');
+  dom.init(this, this.page);
+  
+  this.tableCommon = new PaginationTable({
+    url: 'data/biz/paged_projects.json',
+    query: {
+      fields: [{
+        name: "birthDate",     
+        title: "出生日期", 
+        input: "date",
+      },{
+        name: "genderCode",     
+        title: "性别", 
+        input: "select",
+        options: {
+          values: [{
+            text: '男性', value: 'M',
+          },{
+            text: '女性', value: 'F',
+          }],     
+        },  
+      },{
+        title: '上级领导',
+        name: 'anyCascade',
+        input: 'cascade',
+        options: {
+          levels: [{
+            name: 'departmentId',
+            fields: {
+              value: 'id',
+              text: 'name'
+            },
+            text: '部门',
+            width: 'calc(49% - 3px)',
+            url: 'data/biz/departments.json',
+          },{
+            name: 'employeeId',
+            fields: {
+              value: 'id',
+              text: 'name'
+            },
+            text: '领导',
+            width: 'calc(49% - 3px)',
+            url: 'data/biz/emplyees.json'
+          }]
+        }
+      }]
+    },
+    columns: [{
+      title: '名称',
+    },{
+      title: '进度',
+    },{
+      title: '成员',
+    }],
+  });
+  this.tableCommon.render(this.widgetTableCommonLive);
+})();
+</script>
+

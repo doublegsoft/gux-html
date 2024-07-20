@@ -1,0 +1,41 @@
+<div id="pageUserFeedbackEdit" class="page">
+  <div class="page-body">
+    <div widget-id="widgetFormUserFeedback"></div>
+  </div>
+</div>
+<script>
+function PageUserFeedbackEdit() {
+  this.page = dom.find('#pageUserFeedbackEdit');
+}
+
+PageUserFeedbackEdit.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  this.formUserFeedback = new EditableForm({
+    fields:[{
+      name: 'userFeedbackId',     
+      title: '自助标签', 
+      input: 'hidden',
+    },{
+      name: 'category',     
+      title: '目录', 
+      input: 'text',
+    },{
+      name: 'content',     
+      title: '反馈内容', 
+      input: 'longtext',
+    }],
+  });
+  this.formUserFeedback.render(this.widgetFormUserFeedback);
+};
+
+PageUserFeedbackEdit.prototype.destroy = function () {
+  delete pageUserFeedbackEdit;
+};
+
+PageUserFeedbackEdit.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageUserFeedbackEdit = new PageUserFeedbackEdit();
+</script>

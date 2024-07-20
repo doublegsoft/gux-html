@@ -1,0 +1,154 @@
+<div id="pageSocialMediaAccountList" class="page">
+  <div class="page-header d-flex pl-3 pr-3" >
+    <strong>社交媒体账号</strong>
+    <div class="d-flex ms-auto">
+      <a widget-id="buttonAdd" class="btn btn-sm btn-outline-primary mr-2">新增社交媒体账号</a>
+    </div>
+  </div>
+  <div class="page-body">
+    <div widget-id="widgetTableSocialMediaAccount"></div>
+  </div>
+</div>
+<script>
+function PageSocialMediaAccountList() {
+  this.page = dom.find('#pageSocialMediaAccountList');
+}
+
+PageSocialMediaAccountList.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  /*!
+  ** 跳转到【社交媒体账号】编辑页面
+  */
+  dom.bind(this.buttonAdd, 'click', ev => {
+    this.gotoEditSocialMediaAccount({});
+  });
+  this.tableSocialMediaAccount = new PaginationTable({
+    columns:[{
+      title: '搜索条件', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+      },
+    },{
+      title: '所有者', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+      },
+    },{
+      title: '内容', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+        td.innerHTML = row.cotnent;  
+      },
+    },{
+      title: '状态', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+      },
+    },{
+      title: '操作', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+        /*!
+        ** 编辑
+        */
+        let buttonEdit = dom.templatize(`
+          <a class="btn btn-sm btn-link">编辑</a>
+        `, row);
+        dom.bind(buttonEdit, 'click', ev => {
+          this.gotoEditSocialMediaAccount(row);
+        }); 
+        td.appendChild(buttonEdit);
+        /*!
+        ** 详情
+        */
+        let buttonDetail = dom.templatize(`
+          <a class="btn btn-sm btn-link">详情</a>
+        `, row);
+        dom.bind(buttonDetail, 'click', ev => {
+          this.gotoDetailSocialMediaAccount(row);
+        }); 
+        td.appendChild(buttonDetail);
+        /*!
+        ** 删除
+        */
+        let buttonDelete = dom.templatize(`
+          <a class="btn btn-sm btn-link">删除</a>
+        `, row);
+        dom.bind(buttonDelete, 'click', ev => {
+          dialog.confirm('确定删除该条信息？', () => {
+            this.doDeleteSocialMediaAccount(row);
+          });      
+        }); 
+        td.appendChild(buttonDelete);
+      },
+    }],
+  });
+  this.tableSocialMediaAccount.render(this.widgetTableSocialMediaAccount);
+};
+
+/*!
+** 跳转到【社交媒体账号】编辑页面
+*/
+PageSocialMediaAccountList.prototype.gotoEditSocialMediaAccount = function (model) {
+  ajax.sidebar({
+    url: 'html/stdbiz/pim/social_media_account/edit.html',
+    title: (model.socialMediaAccountName || '新增') + '信息',
+    actions: [{
+      title: '保存',
+      classes: 'btn btn-sm btn-primary',
+      onClick: ev => {
+        
+      },
+    },{
+      title: '关闭',
+      classes: 'btn btn-sm btn-success',
+      onClick: ev => { dom.close('sidebar'); },
+    }],
+    success: () => {
+      pageSocialMediaAccountEdit.show({
+        socialMediaAccountId: model.socialMediaAccountId,
+      });
+    },
+  });     
+};
+      
+/*!
+** 跳转到【社交媒体账号】详情页面
+*/
+PageSocialMediaAccountList.prototype.gotoDetailSocialMediaAccount = function (model) {
+  ajax.overlay({
+    url: 'html/stdbiz/pim/social_media_account/detail.html',
+    title: model.socialMediaAccountName + '详情',
+    success: () => {
+      pageSocialMediaAccountDetail.show({
+        socialMediaAccountId: model.socialMediaAccountId,
+      });
+    },
+  });    
+};
+      
+/*!
+** 调用【社交媒体账号】删除接口
+*/
+PageSocialMediaAccountList.prototype.doDeleteSocialMediaAccount = function (model) {
+  xhr.post({
+    url: '/api/v3/common/script/stdbiz/pim/social_media_account/delete',
+    params: {
+      socialMediaAccountId: model.socialMediaAccountId,
+    },
+  }).then(data => {
+  
+  });    
+};
+
+PageSocialMediaAccountList.prototype.destroy = function () {
+  delete pageSocialMediaAccountList;
+};
+
+PageSocialMediaAccountList.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageSocialMediaAccountList = new PageSocialMediaAccountList();
+</script>

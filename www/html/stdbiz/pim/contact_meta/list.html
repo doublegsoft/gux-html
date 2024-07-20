@@ -1,0 +1,154 @@
+<div id="pageContactMetaList" class="page">
+  <div class="page-header d-flex pl-3 pr-3" >
+    <strong>联系人基本信息</strong>
+    <div class="d-flex ms-auto">
+      <a widget-id="buttonAdd" class="btn btn-sm btn-outline-primary mr-2">新增联系人基本信息</a>
+    </div>
+  </div>
+  <div class="page-body">
+    <div widget-id="widgetTableContactMeta"></div>
+  </div>
+</div>
+<script>
+function PageContactMetaList() {
+  this.page = dom.find('#pageContactMetaList');
+}
+
+PageContactMetaList.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  /*!
+  ** 跳转到【联系人基本信息】编辑页面
+  */
+  dom.bind(this.buttonAdd, 'click', ev => {
+    this.gotoEditContactMeta({});
+  });
+  this.tableContactMeta = new PaginationTable({
+    columns:[{
+      title: '搜索条件', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+      },
+    },{
+      title: '所有者', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+      },
+    },{
+      title: '内容', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+        td.innerHTML = row.cotnent;  
+      },
+    },{
+      title: '状态', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+      },
+    },{
+      title: '操作', 
+      style: 'text-align:center;', 
+      display: (row, td, colidx, rowidx) => {
+        /*!
+        ** 编辑
+        */
+        let buttonEdit = dom.templatize(`
+          <a class="btn btn-sm btn-link">编辑</a>
+        `, row);
+        dom.bind(buttonEdit, 'click', ev => {
+          this.gotoEditContactMeta(row);
+        }); 
+        td.appendChild(buttonEdit);
+        /*!
+        ** 详情
+        */
+        let buttonDetail = dom.templatize(`
+          <a class="btn btn-sm btn-link">详情</a>
+        `, row);
+        dom.bind(buttonDetail, 'click', ev => {
+          this.gotoDetailContactMeta(row);
+        }); 
+        td.appendChild(buttonDetail);
+        /*!
+        ** 删除
+        */
+        let buttonDelete = dom.templatize(`
+          <a class="btn btn-sm btn-link">删除</a>
+        `, row);
+        dom.bind(buttonDelete, 'click', ev => {
+          dialog.confirm('确定删除该条信息？', () => {
+            this.doDeleteContactMeta(row);
+          });      
+        }); 
+        td.appendChild(buttonDelete);
+      },
+    }],
+  });
+  this.tableContactMeta.render(this.widgetTableContactMeta);
+};
+
+/*!
+** 跳转到【联系人基本信息】编辑页面
+*/
+PageContactMetaList.prototype.gotoEditContactMeta = function (model) {
+  ajax.sidebar({
+    url: 'html/stdbiz/pim/contact_meta/edit.html',
+    title: (model.contactMetaName || '新增') + '信息',
+    actions: [{
+      title: '保存',
+      classes: 'btn btn-sm btn-primary',
+      onClick: ev => {
+        
+      },
+    },{
+      title: '关闭',
+      classes: 'btn btn-sm btn-success',
+      onClick: ev => { dom.close('sidebar'); },
+    }],
+    success: () => {
+      pageContactMetaEdit.show({
+        productContactId: model.productContactId,
+      });
+    },
+  });     
+};
+      
+/*!
+** 跳转到【联系人基本信息】详情页面
+*/
+PageContactMetaList.prototype.gotoDetailContactMeta = function (model) {
+  ajax.overlay({
+    url: 'html/stdbiz/pim/contact_meta/detail.html',
+    title: model.contactMetaName + '详情',
+    success: () => {
+      pageContactMetaDetail.show({
+        productContactId: model.productContactId,
+      });
+    },
+  });    
+};
+      
+/*!
+** 调用【联系人基本信息】删除接口
+*/
+PageContactMetaList.prototype.doDeleteContactMeta = function (model) {
+  xhr.post({
+    url: '/api/v3/common/script/stdbiz/pim/contact_meta/delete',
+    params: {
+      productContactId: model.productContactId,
+    },
+  }).then(data => {
+  
+  });    
+};
+
+PageContactMetaList.prototype.destroy = function () {
+  delete pageContactMetaList;
+};
+
+PageContactMetaList.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageContactMetaList = new PageContactMetaList();
+</script>

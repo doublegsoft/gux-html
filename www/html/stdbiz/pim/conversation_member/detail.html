@@ -1,0 +1,26 @@
+<div id="pageConversationMemberDetail" class="page">
+  <div class="page-body">
+    
+  </div>
+</div>
+<script>
+function PageConversationMemberDetail() {
+  this.page = dom.find('#pageConversationMemberDetail');
+}
+
+PageConversationMemberDetail.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  
+};
+
+PageConversationMemberDetail.prototype.destroy = function () {
+  delete pageConversationMemberDetail;
+};
+
+PageConversationMemberDetail.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageConversationMemberDetail = new PageConversationMemberDetail();
+</script>

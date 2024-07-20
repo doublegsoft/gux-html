@@ -1,0 +1,29 @@
+<div id="pageDetailList" class="page">
+  <div class="page-header d-flex pl-3 pr-3" >
+    <strong>自助标签编辑</strong>
+  </div>
+  <div class="page-body">
+    
+  </div>
+</div>
+<script>
+function PageDetailList() {
+  this.page = dom.find('#pageDetailList');
+}
+
+PageDetailList.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  
+};
+
+PageDetailList.prototype.destroy = function () {
+  delete pageDetailList;
+};
+
+PageDetailList.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageDetailList = new PageDetailList();
+</script>

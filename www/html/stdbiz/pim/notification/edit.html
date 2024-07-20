@@ -1,0 +1,50 @@
+<div id="pageNotificationEdit" class="page">
+  <div class="page-body">
+    <div widget-id="widgetFormNotification"></div>
+  </div>
+</div>
+<script>
+function PageNotificationEdit() {
+  this.page = dom.find('#pageNotificationEdit');
+}
+
+PageNotificationEdit.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  this.formNotification = new EditableForm({
+    fields:[{
+      name: 'notificationId',     
+      title: '通知提醒', 
+      input: 'hidden',
+    },{
+      name: 'notificationName',     
+      title: '通知提醒名称', 
+      input: 'text',
+    },{
+      name: 'status',     
+      title: '状态', 
+      input: 'select',
+      options: {
+        values: [{
+          text: '选项A', value: 'A',
+        },{
+          text: '选项B', value: 'B',
+        },{
+          text: '选项C', value: 'C',
+        }],     
+      },  
+    }],
+  });
+  this.formNotification.render(this.widgetFormNotification);
+};
+
+PageNotificationEdit.prototype.destroy = function () {
+  delete pageNotificationEdit;
+};
+
+PageNotificationEdit.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageNotificationEdit = new PageNotificationEdit();
+</script>

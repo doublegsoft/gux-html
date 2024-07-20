@@ -1,0 +1,54 @@
+<div id="pageFavouriteColl" class="page">
+  <div class="page-header d-flex pl-3 pr-3" >
+    <strong>用户喜好</strong>
+    <div class="d-flex ms-auto">
+      <a widget-id="buttonAdd" class="btn btn-sm btn-outline-primary mr-2">新增用户喜好</a>
+    </div>
+  </div>
+  <div class="page-body">
+    
+  </div>
+</div>
+<script>
+function PageFavouriteColl() {
+  this.page = dom.find('#pageFavouriteColl');
+}
+
+PageFavouriteColl.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  /*!
+  ** 跳转到【用户喜好】编辑页面
+  */
+  dom.bind(this.buttonAdd, 'click', ev => {
+    this.gotoEditFavourite({});
+  });
+  
+};
+
+PageFavouriteColl.prototype.buildTile4FavouriteColl = function (row) {
+  let ret = dom.templatize(`
+    <div>
+      <div class="d-flex">
+      </div>
+      <div class="d-flex">
+        <div class="d-flex">
+          <i class="fas fa-star"></i>
+          <span class="ms-auto">{{weight}}</span>
+        </div>
+      </div>
+    </div>
+  `, row);
+  return ret;
+};
+
+PageFavouriteColl.prototype.destroy = function () {
+  delete pageFavouriteColl;
+};
+
+PageFavouriteColl.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageFavouriteColl = new PageFavouriteColl();
+</script>

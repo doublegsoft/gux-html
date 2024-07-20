@@ -1,0 +1,26 @@
+<div id="pageNotificationDetail" class="page">
+  <div class="page-body">
+    
+  </div>
+</div>
+<script>
+function PageNotificationDetail() {
+  this.page = dom.find('#pageNotificationDetail');
+}
+
+PageNotificationDetail.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  
+};
+
+PageNotificationDetail.prototype.destroy = function () {
+  delete pageNotificationDetail;
+};
+
+PageNotificationDetail.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageNotificationDetail = new PageNotificationDetail();
+</script>

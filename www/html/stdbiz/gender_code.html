@@ -1,0 +1,27 @@
+<div id="pageGenderCode" class="page">
+  <div class="page-header d-flex pl-3 pr-3" >
+    <strong>性别</strong>
+  </div>
+  <div class="page-body">
+  </div>
+</div>
+<script>
+function PageGenderCode() {
+  this.page = dom.find('#pageGenderCode');
+}
+
+PageGenderCode.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+};
+
+PageGenderCode.prototype.destroy = function () {
+  delete pageGenderCode;
+};
+
+PageGenderCode.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageGenderCode = new PageGenderCode();
+</script>

@@ -1,0 +1,26 @@
+<div id="pageSearchCriterionSelect" class="page">
+  <div class="page-body">
+    
+  </div>
+</div>
+<script>
+function PageSearchCriterionSelect() {
+  this.page = dom.find('#pageSearchCriterionSelect');
+}
+
+PageSearchCriterionSelect.prototype.initialize = async function (params) {
+  dom.init(this, this.page);
+  
+};
+
+PageSearchCriterionSelect.prototype.destroy = function () {
+  delete pageSearchCriterionSelect;
+};
+
+PageSearchCriterionSelect.prototype.show = function (params) {
+  params = params || {};
+  this.initialize(params);
+};
+
+pageSearchCriterionSelect = new PageSearchCriterionSelect();
+</script>
