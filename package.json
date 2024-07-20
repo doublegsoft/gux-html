@@ -1,0 +1,23 @@
+{
+  "name": "gux-html",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "author": "Christian Gann <guo.guo.gan@gmail.com>",
+  "scripts": {
+    "dev": "node httpd/index.js",
+    "dist": "gulp dist"
+  },
+  "license": "ISC",
+  "devDependencies": {
+    "@babel/core": "^7.24.7",
+    "@babel/preset-env": "^7.24.7",
+    "formidable": "^3.5.1",
+    "gulp": "^5.0.0",
+    "gulp-babel": "^8.0.0",
+    "gulp-concat": "^2.6.1",
+    "gulp-uglify": "^3.0.2",
+    "gulp-uglifycss": "^1.1.0",
+    "moment": "^2.30.1"
+  }
+}
