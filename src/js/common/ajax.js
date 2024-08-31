@@ -59,6 +59,11 @@ ajax.view = async function(opt) {
   let fragment = null;
   if (container) {
     fragment = dom.append(container, html, empty);
+    if (opt.headless === true) {
+      let pageHeader = dom.find('.page-header', container);
+      pageHeader.remove();
+      fragment.container.children[0].classList.remove('page');
+    }
   }
   if (fragment && fragment.id && window[fragment.id] && window[fragment.id].show && !callback) {
     window[fragment.id].show(params);

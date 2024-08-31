@@ -16,7 +16,7 @@
 }
 
 .page-body {
-  
+  padding:  16px;
 }
 
 .app-body {
@@ -40,6 +40,10 @@
   flex: 0 0 200px;
   -ms-flex-order: -1;
   order: -1;
+}
+
+.no-hover:hover {
+  background-color: none;
 }
 
 .sidemenu {
@@ -162,6 +166,7 @@
   color: #fff;
   text-decoration: none;
   background: transparent;
+  font-size: 15px!important;
 }
 
 .sidemenu .nav-link .nav-icon {
@@ -170,7 +175,6 @@
   width: 22px;
   margin: 0 0.5rem 0 0;
   /*font-size: 0.875rem;*/
-  font-size: 18px;
   color: #73818f;
   text-align: center;
 }
@@ -267,4 +271,43 @@
 .icon-error {
   font-size: 10px;
   color: var(--color-error)!important;
+}
+
+.questionnaire-question {
+
+}
+
+.questionnaire-question .questionnaire-answer {
+  border: solid 2px #cfcfcf;
+  line-height: 24px;
+  padding: 6px 12px;
+  margin: 6px;
+  font-size: 14px;
+  color: #cfcfcf;
+}
+
+.questionnaire-question .questionnaire-answer label {
+  color: rgba(0,0,0,0.5);
+  margin-bottom: 0!important;
+}
+
+.questionnaire-question .questionnaire-answer i {
+  position: relative;
+  top: 2px;
+  font-size: 18px;
+  margin-right: 12px;
+  color: #cfcfcf;
+}
+
+.questionnaire-question .questionnaire-answer.checked {
+  border-color: #0e90d2;
+}
+
+.questionnaire-question .questionnaire-answer.checked i {
+  color: #0e90d2;
+}
+
+.questionnaire-question .questionnaire-answer.checked label {
+  color: #0e90d2;
+  font-weight: bolder;
 }

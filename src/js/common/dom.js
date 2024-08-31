@@ -652,6 +652,7 @@ dom.autoheight = function (selector, ancestor, customOffset) {
   // 计算底部的高度
   let bottom = 0;
   while (parent !== ancestor) {
+    if (!parent) break;
     let style = getComputedStyle(parent);
     bottom += parseInt(style.paddingBottom);
     bottom += parseInt(style.marginBottom);

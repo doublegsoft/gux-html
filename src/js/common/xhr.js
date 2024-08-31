@@ -90,7 +90,7 @@ xhr.request = function (opts, method) {
   });
 };
 
-xhr.get = function (opts) {
+xhr.get = async function (opts) {
   let url = opts.url;
   let data = opts.data;
   let success = opts.success;
@@ -105,23 +105,23 @@ xhr.get = function (opts) {
   });
 };
 
-xhr.post = function (opts) {
+xhr.post = async function (opts) {
   return xhr.request(opts, 'POST');
 };
 
-xhr.put = function (opts) {
+xhr.put = async function (opts) {
   return xhr.request(opts, 'PUT');
 };
 
-xhr.patch = function (opts) {
+xhr.patch = async function (opts) {
   return xhr.request(opts, 'PATCH');
 };
 
-xhr.delete = function (opts) {
+xhr.delete = async function (opts) {
   return xhr.request(opts, 'DELETE');
 };
 
-xhr.connect = function (opts) {
+xhr.connect = async function (opts) {
   return xhr.request(opts, 'CONNECT');
 };
 

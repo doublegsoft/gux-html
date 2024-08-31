@@ -59,6 +59,11 @@ ajax.view = async function(opt) {
   let fragment = null;
   if (container) {
     fragment = dom.append(container, html, empty);
+    if (opt.headless === true) {
+      let pageHeader = dom.find('.page-header', container);
+      pageHeader.remove();
+      fragment.container.children[0].classList.remove('page');
+    }
   }
   if (fragment && fragment.id && window[fragment.id] && window[fragment.id].show && !callback) {
     window[fragment.id].show(params);
@@ -191,6 +196,102 @@ dialog.confirm = function (message, callback) {
   }, function () {
 
   });
+};
+
+dialog.html = function(opt) {
+  layer.open({
+    type: 0,
+    closeBtn: 1,
+    offset: '150px',
+    shade: 0.5,
+    area : [opt.width || '50%', ''],
+    shadeClose: true,
+    title: opt.title || '&nbsp;',
+    content: opt.html,
+    btn: ['确定', '关闭'],
+    success: function(layero, index) {
+      if (opt.load) opt.load(layero, index);
+    },
+    yes: function (index, layers) {
+      let layerContent = dom.find('div.layui-layer-content', layers[0]);
+      if (layerContent.children.length == 1) {
+        opt.success(layerContent.children[0]);
+      } else {
+        opt.success(layerContent.children);
+      }
+      layer.close(index);
+    },
+    btn1: function () {
+
+    }
+  });
+};
+if (typeof dnd === 'undefined')
+  dnd = {};
+
+dnd.setDraggable = function (selector, payload, callback) {
+  let element;
+  if (typeof selector === 'string') {
+    element = document.querySelector(selector);
+  } else {
+    element = selector;
+  }
+  element.setAttribute("draggable", "true");
+  element.ondragstart = function(ev) {
+    let li = element;// dom.ancestor(ev.target, 'li');
+    let dragImage = li.getAttribute('widget-drag-image');
+    let x = event.clientX;
+    let y = event.clientY;
+    for (let key in payload)
+      ev.dataTransfer.setData(key, payload[key]);
+    if (dragImage && dragImage != '') {
+      let image = new Image();
+      image.src = dragImage;
+      ev.dataTransfer.setDragImage(image, x, y);
+    }
+    let target = event.target;
+    if (callback) {
+      callback(x, y, target);
+    }
+  };
+};
+
+dnd.clearDraggable = function(selector) {
+  let element;
+  if (typeof selector === 'string') {
+    element = document.querySelector(selector);
+  } else {
+    element = selector;
+  }
+  element.setAttribute("draggable", "false");
+  element.removeEventListener("dragstart", function() {});
+};
+
+dnd.setDroppable = function (selector, callback) {
+  let element;
+  if (typeof selector === 'string') {
+    element = document.querySelector(selector);
+  } else {
+    element = selector;
+  }
+  element.ondragover = function (event) {
+    event.preventDefault();
+  };
+  element.ondrop = function (event) {
+    event.preventDefault();
+    event.stopPropagation();
+    let rect = element.getBoundingClientRect();
+    let x = event.clientX - rect.left;
+    let y = event.clientY - rect.top;
+    if (callback) {
+      let data = {};
+      for (let i = 0; i < event.dataTransfer.items.length; i++) {
+        let name = event.dataTransfer.items[i].type;
+        data[name] = event.dataTransfer.getData(name);
+      }
+      callback(parseInt(x), y, data);
+    }
+  };
 };
 /*
 ** ──────────────────────────────────────────────────
@@ -846,6 +947,7 @@ dom.autoheight = function (selector, ancestor, customOffset) {
   // 计算底部的高度
   let bottom = 0;
   while (parent !== ancestor) {
+    if (!parent) break;
     let style = getComputedStyle(parent);
     bottom += parseInt(style.paddingBottom);
     bottom += parseInt(style.marginBottom);
@@ -1915,7 +2017,7 @@ xhr.request = function (opts, method) {
   });
 };
 
-xhr.get = function (opts) {
+xhr.get = async function (opts) {
   let url = opts.url;
   let data = opts.data;
   let success = opts.success;
@@ -1930,23 +2032,23 @@ xhr.get = function (opts) {
   });
 };
 
-xhr.post = function (opts) {
+xhr.post = async function (opts) {
   return xhr.request(opts, 'POST');
 };
 
-xhr.put = function (opts) {
+xhr.put = async function (opts) {
   return xhr.request(opts, 'PUT');
 };
 
-xhr.patch = function (opts) {
+xhr.patch = async function (opts) {
   return xhr.request(opts, 'PATCH');
 };
 
-xhr.delete = function (opts) {
+xhr.delete = async function (opts) {
   return xhr.request(opts, 'DELETE');
 };
 
-xhr.connect = function (opts) {
+xhr.connect = async function (opts) {
   return xhr.request(opts, 'CONNECT');
 };
 
@@ -4459,6 +4561,116 @@ Medias.prototype.play = function (path) {
     }
   });
 };
+function MobileFrame(opts) {
+  /*!
+  ** 背景色，明亮模式和暗黑模式。
+  */
+  this.url = opts.url;
+  this.width = opts.width;
+}
+
+MobileFrame.prototype.render = function (containerId) {
+  /*!
+  ** 常量设置，和手机背景图片密切相关。
+  */
+  const MOBILE_AREA_ASPECT_RATIO = 1284 / 2778;
+  const MOBILE_IMAGE_WIDTH = 462;
+  const MOBILE_IMAGE_HEIGHT = 900;
+  const MOBILE_SAFE_AREA_TOP_LEFT_X = 15;
+  const MOBILE_SAFE_AREA_TOP_LEFT_Y = 60;
+  const MOBILE_SAFE_AREA_TOP_RIGHT_X = 446;
+  const MOBILE_SAFE_AREA_TOP_RIGHT_Y = 60;
+  const MOBILE_SAFE_AREA_BOT_LEFT_X = 15;
+  const MOBILE_SAFE_AREA_BOT_LEFT_Y = 836;
+  const MOBILE_SAFE_AREA_BOT_RIGHT_X = 446;
+  const MOBILE_SAFE_AREA_BOT_RIGHT_Y = 836;
+  const MOBILE_TOP_BAR_LEFT_X = 60;
+  const MOBILE_TOP_BAR_LEFT_Y = 13;
+  const MOBILE_TOP_BAR_RIGHT_X = 398;
+  const MOBILE_TOP_BAR_RIGHT_Y = 13;
+
+  const MOBILE_BOT_BAR_LEFT_X = 60;
+  const MOBILE_BOT_BAR_LEFT_Y = 890;
+  const MOBILE_BOT_BAR_RIGHT_X = 398;
+  const MOBILE_BOT_BAR_RIGHT_Y = 890;
+
+  const MOBILE_IMAGE_ASPECT_RATIO = MOBILE_IMAGE_WIDTH / MOBILE_IMAGE_HEIGHT;
+
+  this.container = dom.find(containerId);
+
+  let rect = this.container.getBoundingClientRect();
+  let ratio = rect.height / MOBILE_IMAGE_HEIGHT;
+
+  let width = this.width;
+  let height = 0;
+  if (!width) {
+    height = ratio * MOBILE_IMAGE_HEIGHT;
+    width = height * MOBILE_IMAGE_ASPECT_RATIO;
+  } else {
+    height = width / MOBILE_IMAGE_ASPECT_RATIO;
+  }
+  this.width = width;
+
+  this.scaleRatio = this.width / MOBILE_IMAGE_WIDTH;
+
+  this.safeAreaTopLeftX = MOBILE_SAFE_AREA_TOP_LEFT_X * this.scaleRatio;
+  this.safeAreaTopLeftY = MOBILE_SAFE_AREA_TOP_LEFT_Y * this.scaleRatio;
+  this.safeAreaTopRightX = MOBILE_SAFE_AREA_TOP_RIGHT_X * this.scaleRatio;
+  this.safeAreaTopRightY = MOBILE_SAFE_AREA_TOP_RIGHT_Y * this.scaleRatio;
+  this.safeAreaBotLeftX = MOBILE_SAFE_AREA_BOT_LEFT_X * this.scaleRatio;
+  this.safeAreaBotLeftY = MOBILE_SAFE_AREA_BOT_LEFT_Y * this.scaleRatio;
+  this.safeAreaBotRightX = MOBILE_SAFE_AREA_BOT_RIGHT_X * this.scaleRatio;
+  this.safeAreaBotRightY = MOBILE_SAFE_AREA_BOT_RIGHT_Y * this.scaleRatio;
+  this.safeAreaWidth = this.safeAreaTopRightX - this.safeAreaTopLeftX;
+  this.safeAreaHeight = this.safeAreaBotLeftY - this.safeAreaTopLeftY;
+
+  this.topBarLeftX = MOBILE_TOP_BAR_LEFT_X * this.scaleRatio;
+  this.topBarLeftY = MOBILE_TOP_BAR_LEFT_Y * this.scaleRatio;
+  this.topBarRightX = MOBILE_TOP_BAR_RIGHT_X * this.scaleRatio;
+  this.topBarRightY = MOBILE_TOP_BAR_RIGHT_Y * this.scaleRatio;
+
+  this.botBarLeftX = MOBILE_BOT_BAR_LEFT_X * this.scaleRatio;
+  this.botBarLeftY = MOBILE_BOT_BAR_LEFT_Y * this.scaleRatio;
+  this.botBarRightX = MOBILE_BOT_BAR_RIGHT_X * this.scaleRatio;
+  this.botBarRightY = MOBILE_BOT_BAR_RIGHT_Y * this.scaleRatio;
+
+  this.safeAreaWidth = this.safeAreaTopRightX - this.safeAreaTopLeftX;
+  this.safeAreaHeight = this.safeAreaBotRightY - this.safeAreaTopRightY;
+
+  this.paddingLeft = 12 * this.scaleRatio;
+  this.paddingRight = 12 * this.scaleRatio;
+
+  let img = dom.create('img', 'm-auto');
+  img.src = '/img/emulator/iphone.png';
+  img.style.width = width + 'px';
+  img.style.height = height + 'px';
+
+  this.container.appendChild(img);
+
+  const top = img.offsetTop;
+  const left = img.offsetLeft;
+  this.iframe = dom.create('iframe', 'position-absolute', 'border-less');
+  this.iframe.frameborder = 'none';
+  this.iframe.src = this.url;
+  this.iframe.style.left = (left + this.safeAreaTopLeftX + 1) + 'px';
+  this.iframe.style.top = (top + this.safeAreaTopLeftY + 1) + 'px';
+  this.iframe.style.width = (this.safeAreaWidth - 2)  + 'px';
+  this.iframe.style.height = (this.safeAreaHeight - 2) + 'px';
+  this.container.appendChild(this.iframe);
+};
+
+MobileFrame.prototype.preview = function (html, callback) {
+  let body = this.iframe.contentWindow.document.body;
+  body.innerHTML = html;
+  body.querySelectorAll('img').forEach(img => {
+    img.style.width = "100%";
+  });
+  if (callback) {
+    callback(body);
+  }
+};
+
+
 /*
 ** ──────────────────────────────────────────────────
 ** ─██████████████─██████──██████─████████──████████─
@@ -6335,4 +6547,762 @@ QueryLayout.prototype.createButton = function(action) {
   button.innerText = action.text;
   button.addEventListener('click', action.click);
   return button;
+};
+
+function QuestionnaireDesigner(opt) {
+  this.title = opt.title || '问卷调查';
+  this.questions = opt.questions || [];
+  this.draggingTarget = null;
+  this.onSave = opt.onSave || function(model) {};
+  this.onDelete = opt.onDelete || function(model) {};
+  QuestionnaireDesigner.instance = this;
+}
+
+QuestionnaireDesigner.QUESTION_MULTIPLE_CHOICE = 'multiple';
+QuestionnaireDesigner.QUESTION_SINGLE_CHOICE = 'single';
+QuestionnaireDesigner.QUESTION_SHORT_ANSWER = 'answer';
+
+QuestionnaireDesigner.ATTRIBUTE_TITLE = 'data-questionnaire-question-title';
+QuestionnaireDesigner.ATTRIBUTE_TYPE = 'data-questionnaire-question-type';
+QuestionnaireDesigner.ATTRIBUTE_ORDINAL_POSITION = 'data-questionnaire-question-ordinal-position';
+QuestionnaireDesigner.ATTRIBUTE_VALUES = 'data-questionnaire-question-values';
+QuestionnaireDesigner.ATTRIBUTE_MODEL = 'data-questionnaire-question-model';
+
+QuestionnaireDesigner.COLOR_SELECTED = '#3880ff';
+
+QuestionnaireDesigner.MODEL_MULTIPLE_CHOICE = `
+{
+"title":"多选题示例",
+"type":"multiple",
+"values": ["选线A","选项B","选项C","选项D"]
+}
+`;
+
+QuestionnaireDesigner.MODEL_SINGLE_CHOICE = `
+{
+"title":"单选题示例",
+"type":"single",
+"values": ["选项A","选项B","选项C","选项D"]
+}
+`;
+
+QuestionnaireDesigner.MODEL_SHORT_ANSWER = `
+{
+"title":"简答题示例",
+"type":"answer"
+}
+`;
+
+/**
+ * the palette component on left side;
+ */
+QuestionnaireDesigner.prototype.palette = function() {
+  let ret = dom.element(`<div class="col-md-4" style="padding: 0; border-radius: unset;"></div>`);
+  let ul = dom.create('ul', 'list-group', 'mt-2', 'ml-4');
+  let li = dom.create('li', 'list-group-item','grab');
+  li.setAttribute('draggable', true);
+  li.setAttribute(QuestionnaireDesigner.ATTRIBUTE_TYPE, QuestionnaireDesigner.QUESTION_SINGLE_CHOICE);
+  li.innerText = '单选题';
+  ul.appendChild(li);
+  dnd.setDraggable(li, {
+    model: QuestionnaireDesigner.MODEL_SINGLE_CHOICE
+  }, function() {});
+
+  li = dom.create('li', 'list-group-item', 'grab');
+  li.setAttribute('draggable', true);
+  li.setAttribute(QuestionnaireDesigner.ATTRIBUTE_TYPE, QuestionnaireDesigner.QUESTION_MULTIPLE_CHOICE);
+  li.innerText = '多选题';
+  ul.appendChild(li);
+  dnd.setDraggable(li, {
+    model: QuestionnaireDesigner.MODEL_MULTIPLE_CHOICE
+  }, function() {});
+
+  li = dom.create('li', 'list-group-item', 'grab');
+  li.setAttribute('draggable', true);
+  li.setAttribute(QuestionnaireDesigner.ATTRIBUTE_TYPE, QuestionnaireDesigner.QUESTION_SHORT_ANSWER);
+  li.innerText = '问答题';
+  ul.appendChild(li);
+  dnd.setDraggable(li, {
+    model: QuestionnaireDesigner.MODEL_SHORT_ANSWER
+  }, function() {});
+
+  ret.appendChild(ul);
+
+  dom.autoheight(ret, this.container, 0);
+  return ret;
+};
+
+QuestionnaireDesigner.prototype.canvas = function() {
+  let self = this;
+  let ret = dom.element(`
+    <div class="col-md-8 m-0">
+      <div widget-id="widgetQuestionnaireCanvas" 
+           style="padding: 10px; 
+           margin-top: 8px;
+           margin-bottom: 8px;
+           background-color: white; 
+           overflow-y: auto; 
+           border: 4px dashed rgba(0, 0, 0, 0.3);">
+      </div>
+    </div>
+  `);
+  let rect = this.container.getBoundingClientRect();
+  this.widgetQuestionnaireCanvas = dom.find('[widget-id=widgetQuestionnaireCanvas]', ret);
+  this.widgetQuestionnaireCanvas.style.height = (rect.height - 8) + 'px';
+  
+  this.questions.forEach((question, index) => {
+    question.ordinalPosition = (index + 1);
+    this.renderQuestion(this.widgetQuestionnaireCanvas, question);
+  });
+  this.widgetQuestionnaireCanvas.addEventListener('dragover', (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    let x = ev.clientX;
+    let y = ev.clientY;
+
+    let existing = dom.find('[data-questionnaire-question-clone=true]', this.widgetQuestionnaireCanvas);
+    if (existing != null) existing.remove();
+    if (self.draggingTarget == null) return;
+
+    let cloned = self.draggingTarget.cloneNode(true);
+    cloned.style.opacity = '0.5';
+    cloned.setAttribute('data-questionnaire-question-clone', 'true');
+    self.draggingTarget.remove();
+
+    let inserted = false;
+    for (let i = 0; i < this.widgetQuestionnaireCanvas.children.length; i++) {
+      let el = this.widgetQuestionnaireCanvas.children[i];
+      let rect = el.getBoundingClientRect();
+      if (rect.bottom > y) {
+        this.widgetQuestionnaireCanvas.insertBefore(cloned, el);
+        inserted = true;
+        break;
+      }
+    }
+    if (inserted === false) {
+      this.widgetQuestionnaireCanvas.appendChild(cloned);
+    }
+    self.resort(this.widgetQuestionnaireCanvas);
+  });
+  dnd.setDroppable(this.widgetQuestionnaireCanvas, (x, y, data) => {
+    if (self.draggingTarget != null) {
+      self.draggingTarget.remove();
+      self.draggingTarget = null;
+      let dragged = dom.find('[data-questionnaire-question-clone=true]', this.widgetQuestionnaireCanvas);
+      dragged.style.opacity = '';
+      dragged.removeAttribute('data-questionnaire-question-clone');
+      dom.bind(dragged, 'click', (ev) => {
+        ev.preventDefault();
+        ev.stopPropagation();
+        this.clearAndSelect(dragged);
+      });
+      self.resort(dragged.parentElement);
+      self.clearAndSelect(dragged, true);
+    } else {
+      for (let i = 0; i < this.widgetQuestionnaireCanvas.children.length; i++) {
+        this.widgetQuestionnaireCanvas.children[i].style.borderColor = 'transparent';
+        let operations = dom.find('[widget-id=operations]', this.widgetQuestionnaireCanvas.children[i]);
+        if (operations != null) {
+          operations.remove();
+        }
+      }
+      this.renderQuestion(this.widgetQuestionnaireCanvas, JSON.parse(data.model));
+    }
+    /*!
+    ** 事件通知其他组件。
+    */
+    this.dispatchEvent();
+  });
+
+  dom.bind(this.widgetQuestionnaireCanvas, 'click', ev => {
+    for (let i = 0; i < this.widgetQuestionnaireCanvas.children.length; i++) {
+      this.clearAndSelect(this.widgetQuestionnaireCanvas.children[i], true);
+    }
+  });
+
+  return ret;
+};
+
+QuestionnaireDesigner.prototype.render = function(containerId, params) {
+  params = params || {};
+  if (params.questions) {
+    this.questions = params.questions;
+  }
+  this.container = dom.find(containerId);
+  this.container.innerHTML = '';
+  this.container.appendChild(this.palette());
+  this.container.appendChild(this.canvas());
+};
+
+/**
+ * 设计时渲染多选题。
+ */
+QuestionnaireDesigner.prototype.renderMultipleChoice = function(container, question) {
+  let existing = true;
+  if (!question.id) {
+    question.ordinalPosition = container.children.length + 1;
+    question.id = 'multiple_' + Date.now();
+    existing = false;
+  }
+  let model = {...question};
+  delete model.id;
+  delete model.ordinalPosition;
+  question.model = JSON.stringify(model);
+  let el = dom.templatize(`
+    <div data-questionnaire-question-id="{{id}}" data-questionnaire-question-model="{{model}}" 
+         class="questionnaire-question" style="margin-bottom: 12px; padding: 6px; border: 6px solid transparent;">
+      <div style="margin-bottom: 6px">
+        <strong>{{ordinalPosition}}. {{title}}：</strong>
+      </div>
+      {{#each values}}
+      <div class="questionnaire-answer d-flex">
+        <i class="far fa-check-square"></i>
+        <label>{{this}}</label>
+      </div>
+      {{/each}}
+    </div>
+  `, question);
+  dom.bind(el, 'click', (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    this.clearAndSelect(el);
+  });
+  if (existing === true) {
+    let old = dom.find('[data-questionnaire-question-id="' + question.id + '"]');
+    if (old)
+      container.replaceChild(el, old);
+    else
+      container.appendChild(el);
+  } else {
+    container.appendChild(el);
+  }
+};
+
+/**
+ * 设计时渲染单选题。
+ */
+QuestionnaireDesigner.prototype.renderSingleChoice = function(container, question) {
+  let existing = true;
+  if (!question.id) {
+    question.ordinalPosition = container.children.length + 1;
+    question.id = 'single_' + Date.now();
+    existing = false;
+  }
+  let model = {...question};
+  delete model.id;
+  delete model.ordinalPosition;
+  question.model = JSON.stringify(model);
+  if (existing === true && !question.ordinalPosition) {
+    let old = dom.find('[data-questionnaire-question-id="' + question.id + '"]');
+    let nodes = Array.prototype.slice.call(container.children);
+    question.ordinalPosition = nodes.indexOf(old) + 1;
+  }
+  let el = dom.templatize(`
+    <div data-questionnaire-question-id="{{id}}" 
+         data-questionnaire-question-model="{{model}}" 
+         data-switch=".questionnaire-answer+.checked"
+         class="questionnaire-question" style="margin-bottom: 12px; padding: 6px; border: 6px solid transparent;">
+      <div style="margin-bottom: 6px">
+        <strong>{{ordinalPosition}}. {{title}}：</strong>
+      </div>
+      {{#each values}}
+      <div class="questionnaire-answer d-flex" data-questionnaire-question-name="{{../id}}">
+        <i class="far fa-check-circle"></i>
+        <label>{{this}}</label>
+      </div>
+      {{/each}}
+    </div>
+  `, question);
+  dom.bind(el, 'click', (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    this.clearAndSelect(el);
+  });
+  if (existing === true) {
+    let old = dom.find('[data-questionnaire-question-id="' + question.id + '"]');
+    if (old)
+      container.replaceChild(el, old);
+    else
+      container.appendChild(el);
+  } else {
+    container.appendChild(el);
+  }
+};
+
+/**
+ * 设计时渲染问答题。
+ */
+QuestionnaireDesigner.prototype.renderShortAnswer = function(container, question) {
+  let existing = true;
+  if (!question.id) {
+    question.ordinalPosition = container.children.length + 1;
+    question.id = 'answer_' + new Date().getMilliseconds();
+    existing = false;
+  }
+  let model = {...question};
+  delete model.id;
+  delete model.ordinalPosition;
+  question.model = JSON.stringify(model);
+  let el = dom.templatize(`
+    <div data-questionnaire-question-id="{{id}}" data-questionnaire-question-model="{{model}}" class="questionnaire-question"  style="margin-bottom: 12px; padding: 6px; border: 6px solid transparent;">
+      <div style="margin-bottom: 6px">
+        <strong>{{ordinalPosition}}. {{title}}：</strong>
+      </div>
+      <div>
+        <textarea name="{{id}}" style="width: 100%; height: 120px; resize: none; outline: none; box-shadow: none;  background-color: transparent;" readonly></textarea>
+      </div>
+    </div>
+  `, question);
+  dom.bind(el, 'click', (ev) => {
+    ev.preventDefault();
+    ev.stopPropagation();
+    this.clearAndSelect(el);
+  });
+  if (existing === true) {
+    let old = dom.find('[data-questionnaire-question-id="' + question.id + '"]');
+    if (old) {
+      container.replaceChild(el, old);
+    } else {
+      container.appendChild(el);
+    }
+  } else {
+    container.appendChild(el);
+  }
+};
+
+QuestionnaireDesigner.prototype.clearAndSelect = function(element, clear) {
+  let self = this;
+  if (element.parentElement == null) return;
+  for (let i = 0; i < element.parentElement.children.length; i++) {
+    element.parentElement.children[i].style.borderColor = 'transparent';
+    let operations = dom.find('[widget-id=operations]', element.parentElement.children[i]);
+    if (operations != null) {
+      operations.remove();
+    }
+  }
+
+  if (clear === true) return;
+  element.style.borderColor = QuestionnaireDesigner.COLOR_SELECTED;
+
+  let operations = dom.element(`
+    <div widget-id="operations" style="position: relative; float: right; right: -6px; bottom: 25px;">
+      <a widget-id="buttonMove" class="btn text-light" style="cursor: move;">
+        <i class="fas fa-arrows-alt"></i>
+      </a>
+      <a widget-id="buttonEdit" class="btn text-light"">
+        <i class="fas fa-edit"></i>
+      </a>
+      <a widget-id="buttonDelete" class="btn text-light">
+        <i class="fas fa-trash-alt"></i>
+      </a>
+    </div>
+  `);
+  operations.style.backgroundColor = QuestionnaireDesigner.COLOR_SELECTED;
+
+  let buttonMove = dom.find('a[widget-id=buttonMove', operations);
+  dom.bind(buttonMove, 'mousedown', ev => {
+    let root = dom.ancestor(ev.target, 'div', 'questionnaire-question');
+    dnd.setDraggable(root, {
+      model: root.getAttribute('data-questionnaire-question-model')
+    }, function(x, y, target) {
+      self.draggingTarget = target; // target.cloneNode(true);
+      // self.draggingTarget.style.opacity = '0.50';
+      // self.draggingTarget.setAttribute('data-questionnaire-clone', 'true');
+      // target.style.display = 'none';
+      dnd.clearDraggable(target);
+    });
+  });
+
+  let buttonEdit = dom.find('a[widget-id=buttonEdit]', operations);
+  dom.bind(buttonEdit, 'click', ev => {
+    let model = element.getAttribute(QuestionnaireDesigner.ATTRIBUTE_MODEL);
+    model = JSON.parse(model);
+    let question = {
+      ...model,
+      id: element.getAttribute('data-questionnaire-question-id'),
+    };
+    this.edit(question);
+  });
+
+  let buttonDelete = dom.find('a[widget-id=buttonDelete]', operations);
+  dom.bind(buttonDelete, 'click', ev => {
+    let model = JSON.parse(element.getAttribute('data-questionnaire-question-model'));
+    if (!model.questionnaireQuestionId) {
+      model.questionnaireQuestionId = element.getAttribute('data-questionnaire-question-id');
+    }
+    this.onDelete(model, element)
+  });
+  element.appendChild(operations);
+};
+
+QuestionnaireDesigner.prototype.resort = function(container) {
+  for (let i = 0; i < container.children.length; i++) {
+    let child = container.children[i];
+    let strong = dom.find('strong', child);
+    let text = strong.innerText;
+    strong.innerText = text.replace(/\d+\./i, i + 1 + '.');
+    let model = JSON.parse(child.getAttribute('data-questionnaire-question-model'));
+    model.ordinalPosition = i + 1;
+    child.setAttribute('data-questionnaire-question-model', JSON.stringify(model));
+  }
+};
+
+QuestionnaireDesigner.prototype.renderQuestion = function(container, question) {
+  if (question.type === QuestionnaireDesigner.QUESTION_MULTIPLE_CHOICE) {
+    this.renderMultipleChoice(container, question);
+  } else if (question.type === QuestionnaireDesigner.QUESTION_SINGLE_CHOICE) {
+    this.renderSingleChoice(container, question);
+  } else if (question.type === QuestionnaireDesigner.QUESTION_SHORT_ANSWER) {
+    this.renderShortAnswer(container, question);
+  }
+};
+
+QuestionnaireDesigner.prototype.renderQuestions = function(questions) {
+  for (let i = 0; i < questions.length; i++) {
+    this.renderQuestion(this.widgetQuestionnaireCanvas, questions[i]);
+  }
+};
+
+QuestionnaireDesigner.prototype.edit = function(question) {
+  let self = this;
+  Handlebars.registerHelper('ifne', function (a, b, options) {
+    if (a != b) { return options.fn(this); }
+    return options.inverse(this);
+  });
+  let questionId = question.id;
+  question.options = [];
+  question.values = question.values || [];
+  for (let i = 0; i < question.values.length; i++) {
+    question.options.push({
+      value: question.values[i],
+      score: question.scores ? question.scores[i] : '0',
+    })
+  }
+  let el = dom.templatize(`
+    <div>
+    <div widget-id="dialogQuestionEdit" class="card border-less">
+      <div class="card-body">
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <input class="form-control" name="id" type="hidden" value="{{id}}">
+              <input class="form-control" name="ordinalPosition" type="hidden" value="{{ordinalPosition}}">
+              <input class="form-control" name="type" type="hidden" value="{{type}}">
+              <label for="name"><strong>标题</strong></label>
+              <input class="form-control" name="title" type="text" value="{{title}}">
+            </div>
+          </div>
+        </div>  
+        {{#ifne type "answer"}}
+        <div class="row">
+          <div class="col-sm-12">
+            <div class="form-group">
+              <label for="name">
+                <strong>选项</strong>
+                <a widget-id="buttonAdd" class="btn btn-link">
+                  <i class="fas fa-plus-circle"></i>
+                </a>
+              </label>
+              <ul class="list-group">
+                {{#each options}}
+                <li class="list-group-item d-flex pt-0 pb-0">
+                  <input onfocus="QuestionnaireDesigner.instance.onCellFocus(this);" 
+                         onkeydown="QuestionnaireDesigner.instance.onCellKeyPress(event);"
+                         name="values" style="border: none; height=100%; width: 100%" value="{{value}}">
+                  <input onfocus="QuestionnaireDesigner.instance.onCellFocus(this);" 
+                         onkeydown="QuestionnaireDesigner.instance.onCellKeyPress(event);"
+                         name="scores" style="border: none; width: 50px" value="{{score}}">
+                  <a class="btn text-danger line-height-32" onclick="this.parentElement.remove();">
+                    <span class="material-icons">highlight_off</span>
+                  </a>
+                </li>
+                {{/each}}
+              </ul>
+            </div>
+          </div>
+        </div>  
+        {{/ifne}}
+      </div>
+      </div>
+      <div>
+        <span class="keyboard-key material-icons">arrow_upward</span>和
+        <span class="keyboard-key material-icons">arrow_downward</span>
+        可以用于切换输入框。
+      </div>
+    </div>
+  `, question);
+  dialog.html({
+    html: el.innerHTML,
+    load: function() {
+      let dialog = dom.find('div[widget-id="dialogQuestionEdit"]');
+      let buttonAdd = dom.find('a[widget-id=buttonAdd]', dialog);
+      dom.bind(buttonAdd, 'click', ev => {
+        let el = dom.element(`
+          <li class="list-group-item d-flex pt-0 pb-0">
+            <input onfocus="QuestionnaireDesigner.instance.onCellFocus(this);" 
+                   onkeydown="QuestionnaireDesigner.instance.onCellKeyPress(event);"
+                   name="values" style="border: none; height=100%; width: 100%" value="选项">
+            <input onfocus="QuestionnaireDesigner.instance.onCellFocus(this);" 
+                   onkeydown="QuestionnaireDesigner.instance.onCellKeyPress(event);"
+                   name="scores" style="border: none; width: 50px" value="0">
+            <a class="btn text-danger line-height-32" onclick="this.parentElement.remove();">
+              <span class="material-icons">highlight_off</span>
+            </a>
+          </li>
+        `);
+        dom.find('ul', dialog).appendChild(el);
+      });
+    },
+    success: function() {
+      let dialog = dom.find('div[widget-id="dialogQuestionEdit"]');
+      let inputs = dialog.querySelectorAll('input[name=values]');
+      let question = dom.formdata(dialog);
+      question.values = [];
+      question.scores = [];
+      inputs.forEach((el, idx) => {
+        if (el.name === 'values') {
+          question.values.push(el.value);
+        }
+      });
+      inputs = dialog.querySelectorAll('input[name=scores]');
+      inputs.forEach((el, idx) => {
+        if (el.name === 'scores') {
+          question.scores.push(el.value);
+        }
+      });
+      self.renderQuestion(self.widgetQuestionnaireCanvas, {
+        ...question,
+        id: questionId,
+      });
+      self.dispatchEvent();
+    }
+  });
+};
+
+QuestionnaireDesigner.prototype.onCellFocus = function(input) {
+  input.setSelectionRange(0, input.value.length);
+};
+
+QuestionnaireDesigner.prototype.onCellKeyPress = function(ev) {
+  let ul = dom.ancestor(ev.target, 'ul');
+  let inputs = ul.querySelectorAll('input');
+  let index = -1;
+  for (let i = 0; i < inputs.length; i++) {
+    let input = inputs[i];
+    if (input === ev.target) {
+      index = i;
+      break;
+    }
+  }
+  if (ev.keyCode == 38) {
+    // arrow-up
+    if (index - 1 >= 0) {
+      inputs[index - 1].focus();
+      // inputs[index - 1].setSelectionRange(0, inputs[index - 1].value.length);
+    }
+  } else if (ev.keyCode == 40) {
+    // arrow-down
+    if (index + 1 < inputs.length) {
+      inputs[index + 1].focus();
+      // inputs[index + 1].setSelectionRange(0, inputs[index + 1].value.length);
+    }
+  }
+};
+
+QuestionnaireDesigner.prototype.getQuestions = function () {
+  let questions = [];
+  this.widgetQuestionnaireCanvas.querySelectorAll('.questionnaire-question').forEach((el, idx) => {
+    let model = JSON.parse(el.getAttribute('data-questionnaire-question-model'));
+    questions.push({
+      questionId: el.getAttribute('data-questionnaire-question-id'),
+      questionName: model.title,
+      questionType: model.type,
+      content: JSON.stringify(model),
+      ordinalPosition: idx,
+    });
+  });
+  return questions;
+};
+
+QuestionnaireDesigner.prototype.setQuestionIds = function (ids) {
+  this.widgetQuestionnaireCanvas.querySelectorAll('.questionnaire-question').forEach((el, idx) => {
+    el.setAttribute('data-questionnaire-question-id', ids[idx]);
+  });
+};
+
+QuestionnaireDesigner.prototype.selectText = function (el){
+  let sel, range;
+  if (window.getSelection && document.createRange) { //Browser compatibility
+    sel = window.getSelection();
+    if(sel.toString() == ''){ //no text selection
+      window.setTimeout(function(){
+        range = document.createRange(); //range object
+        range.selectNodeContents(el); //sets Range
+        sel.removeAllRanges(); //remove all ranges from selection
+        sel.addRange(range);//add Range to a Selection.
+      },1);
+    }
+  } else if (document.selection) { //older ie
+    sel = document.selection.createRange();
+    if(sel.text == ''){ //no text selection
+      range = document.body.createTextRange();//Creates TextRange object
+      range.moveToElementText(el);//sets Range
+      range.select(); //make selection.
+    }
+  }
+};
+
+QuestionnaireDesigner.prototype.dispatchEvent = function () {
+  let event = new CustomEvent("html-changed", {
+    bubbles: false,
+    detail: {
+      html: this.widgetQuestionnaireCanvas.innerHTML,
+    }
+  });
+  this.widgetQuestionnaireCanvas.dispatchEvent(event);
+};
+
+QuestionnaireDesigner.prototype.on = function (name, handler) {
+  this.widgetQuestionnaireCanvas.addEventListener(name, handler);
+};
+function ReadonlyForm(opts) {
+	// 表单容器
+	this.container = dom.find(opts.containerId);
+	// 远程数据访问地址及参数
+	this.url = opts.url;
+	this.params = opts.params || {};
+	// 本地数据
+	this.local = opts.local;
+	// 显示列数
+	this.columnCount = opts.columnCount || 1;
+	// 显示字段
+	this.fields = opts.fields;
+	this.convert = opts.convert;
+
+	if (this.container) {
+		this.render(this.container, this.params);
+	}
+}
+
+/**
+ * Fetches data from remote url.
+ *
+ * @param params
+ *        the request parameters, local data or undefined
+ */
+ReadonlyForm.prototype.fetch = function (params) {
+	let self = this;
+	if (this.url) {
+		let requestParams = {};
+		utils.clone(this.params, requestParams);
+		utils.clone(params || {}, requestParams);
+		xhr.promise({
+			url: this.url,
+			params: requestParams,
+		}).then((data) => {
+			let _data = data;
+			if (self.convert) {
+				_data = self.convert(data);
+			}
+			self.root(_data);
+		});
+	} else {
+		this.root(params);
+	}
+};
+
+ReadonlyForm.prototype.root = function (data) {
+	this.container.innerHTML = '';
+	data = data || {};
+	let self = this;
+	let root = dom.element('<div class="gx-row"></div>');
+	for (let i = 0; i < this.fields.length; i++) {
+		let field = this.fields[i];
+		field.emptyText = field.emptyText || '-';
+		field.columnCount = field.columnCount || 1;
+		let colnum = parseInt(12 / Number(self.columnCount));
+
+		let averageSpace = 24 / self.columnCount;
+		let labelGridCount = 0;
+		let inputGridCount = 0;
+		if (averageSpace === 24) {
+			labelGridCount = 6;
+			inputGridCount = 18;
+		} else if (averageSpace === 12) {
+			labelGridCount = 4;
+			inputGridCount = 8;
+		} else if (averageSpace === 8) {
+			labelGridCount = 3;
+			inputGridCount = 5;
+		} else if (averageSpace === 6) {
+			labelGridCount = 2;
+			inputGridCount = 4;
+		}
+		let caption = dom.element('<div class="gx-24-' + this.formatGridCount(labelGridCount) + '" style="line-height: 32px;"></div>');
+		let value = dom.element('<strong class="gx-24-' + this.formatGridCount(inputGridCount) + '" style="line-height: 32px;"></strong>');
+
+		if (field.title) {
+			caption.innerText = field.title + '：';
+			let _value = null;
+			if (typeof field.getValue !== 'undefined') {
+				_value = field.getValue.apply(null, data);
+			} else {
+				_value = data[field.name] == undefined ? field.emptyText : data[field.name];
+			}
+			if (field.display) {
+				value = dom.element('<div class="gx-24-' + this.formatGridCount(inputGridCount) + '" style="line-height: 32px;  height: 32px;"></div>');
+				field.display(data, value);
+			} else {
+				// 值转换
+				if (field.convert) {
+					_value = field.convert(data[field.name]);
+				}
+				if (_value != '-') {
+					if (field.convert) {
+						_value = field.convert(data[field.name]);
+					} else {
+						if (field.values && field.values.length > 0) {
+							field.values.forEach(function (item) {
+								if (field.input && (field.input == 'radio' || field.input == 'select') && item.value == data[field.name]) {
+									_value = item.text
+								}
+								if (field.input && field.input == 'checkbox' && data[field.name].indexOf(item.value) > -1) {
+									_value.push(item.text)
+								}
+							});
+							if (field.input && field.input == 'checkbox' && typeof (_value) == 'object') {
+								_value = _value.join(",");
+							}
+						}
+					}
+					if (field.unit) {
+						_value = _value + field.unit;
+					}
+				} else {
+					_value = '-';
+				}
+				value.innerHTML = _value;
+			}
+		}
+		root.appendChild(caption);
+		root.appendChild(value);
+	}
+	this.container.appendChild(root);
+};
+
+ReadonlyForm.prototype.reload = function (params) {
+	this.fetch(params);
+};
+
+ReadonlyForm.prototype.render = function (containerId, params) {
+	if (typeof containerId !== 'undefined')
+		this.container = dom.find(containerId);
+	this.fetch(params);
+};
+
+ReadonlyForm.prototype.formatGridCount = function (count) {
+	if (count < 10) {
+		return '0' + count;
+	}
+	return '' + count;
 };

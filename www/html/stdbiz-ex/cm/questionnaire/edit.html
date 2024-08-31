@@ -1,0 +1,75 @@
+<div id="pageSurveyDesign" class="page" style="overflow-y: auto;">
+  <div class="card" style="margin: auto; width: 100%; height: 100%;">
+    <div widget-id="widgetSourceCode" class="card-body">
+      <div class="gx-row full-height">
+        <div class="gx-24-16" style="overflow: hidden;">
+          <div widget-id="widgetElement" class="position-absolute" style="width: 64px; top: 240px; left: 0;">
+            <a class="btn btn-link pointer text-info d-flex align-items-center justify-content-center"
+               data-model-type="title"
+               style="width: 64px; height: 64px;
+                  border-top: 1px solid;
+                  border-left: 1px solid;
+                  border-right: 1px solid;
+                  border-bottom: 1px solid;
+                  border-radius: unset;">
+              <i class="fas fa-save gx-fs-36"></i>
+            </a>
+          </div>
+          <div widget-id="widgetDesigner" class="row mx-0"></div>
+        </div>
+        <div widget-id="widgetPreview" class="gx-24-08 d-flex" style="overflow: hidden;"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function PageSurveyDesign() {
+  this.page = dom.find('#pageSurveyDesign');
+}
+
+PageSurveyDesign.prototype.initialize = async function(params) {
+  dom.init(this, this.page);
+
+  dom.autoheight(this.widgetDesigner);
+  dom.autoheight(this.widgetPreview);
+  
+  this.widgetDesigner.style.overflowY = 'hidden';
+
+  this.designer = new QuestionnaireDesigner({
+    mobileFramePath: '/mobile/index.html',
+  });
+  this.designer.render(this.widgetDesigner, {});
+  this.designer.on('html-changed', ev => {
+    this.previewer.preview(ev.detail.html);
+  })
+
+  this.previewer = new MobileFrame({
+    url: 'html/misc/preview/mobile.html',
+  });
+  this.previewer.render(this.widgetPreview);
+
+
+  // setInterval(() => {
+  //   this.previewer.preview(this.designer.widgetQuestionnaireCanvas.innerHTML, container => {
+  //     let operations = dom.find('[widget-id=operations]', container);
+  //     if (operations != null) {
+  //       operations.parentElement.style.borderColor = 'transparent';
+  //       operations.remove();
+  //     }
+  //   });
+  // }, 2000);
+};
+
+PageSurveyDesign.prototype.getType = function(type) {
+  if (type === 'single') return '01';
+  if (type === 'multiple') return '02';
+  if (type === 'short_answer') return '05';
+};
+
+PageSurveyDesign.prototype.show = function(params) {
+  this.initialize(params);
+};
+
+pageSurveyDesign = new PageSurveyDesign();
+</script>

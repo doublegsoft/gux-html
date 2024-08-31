@@ -69,7 +69,11 @@ http.createServer(function (request, response) {
   let contentType = mimeTypes[extname] || 'application/octet-stream';
   
   if (filePath.indexOf("/css") == 0 || filePath.indexOf("/js") == 0 ) {
-    filePath = 'src/' + filePath;
+    if (fs.existsSync('src/' + filePath)) {
+      filePath = 'src/' + filePath;
+    } else {
+      filePath = 'www/' + filePath;
+    }
   } else {
     filePath = 'www/' + filePath;
   }
@@ -78,7 +82,6 @@ http.createServer(function (request, response) {
     filePath += '/index.html';
     contentType = 'text/html';
   }
-
   fs.readFile(filePath, function(error, content) {
     if (error) {
       if(error.code == 'ENOENT') {

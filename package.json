@@ -6,7 +6,7 @@
   "author": "Christian Gann <guo.guo.gan@gmail.com>",
   "scripts": {
     "dev": "node httpd/index.js",
-    "dist": "gulp dist"
+    "dist": "node ./node_modules/gulp/bin/gulp.js dist"
   },
   "license": "ISC",
   "devDependencies": {
